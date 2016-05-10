@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.CANTalon;
  */
 public class Claw {
     static CANTalon claw;
+    double P = 10;
+    double I = 0.0004;
+    double D = 0.1;
     
 	public Claw() {
 		 claw = new CANTalon(RobotMap.CLAW);
@@ -19,10 +22,11 @@ public class Claw {
 		claw.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 		claw.configEncoderCodesPerRev(360);
 		claw.enableLimitSwitch(true, true);
-		claw.setPID(1, 0, 0);
+		claw.setPID(P, I, D);
 		claw.enableBrakeMode(false);
 		claw.setSafetyEnabled(true);
 		claw.enable();
+		Robot.clawSetpoint = 0;
 		
 	}
    
@@ -50,6 +54,9 @@ public class Claw {
 		else return oldclaw;
 	}
 	
+	public void checkForZero() {
+		
+	}
 	
 }
 

@@ -43,6 +43,7 @@ public class Robot extends IterativeRobot {
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
+        drivebase.drivebaseInit(); //runs methods relating to configuring motor direction and encoders
         claw.clawInit(); //runs methods relating to configuring PID loops and encoders
         intake.intakeInit(); //runs methods relating to configuring PID loops and encoders
         oi.OIInit(); //runs methods relating to joystick creation
@@ -83,9 +84,11 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	oi.updateJoyValues();                             //updates joystick values
+    	drivebase.updateSensors();                        //updates drive encoders and navX
         drivebase.drive(oi.lStickY, oi.rStickY);          //drive the robot based on inputs from OI
         clawSetpoint = claw.xboxClawCtrl(clawSetpoint);   //update the clawsetpoint
         claw.clawSet(clawSetpoint);	  //tell claw to go to setpoint
+        claw.checkForZero(); //does nothing yet
     }
     
     /**

@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.CANTalon;
 
 public class Intake {
 	CANTalon intake;
+	double P = 1.5;
+	double I = 0;
+	double D = 0.1;
 	
 	public Intake() {
 		intake = new CANTalon(RobotMap.INTAKE);
@@ -14,7 +17,7 @@ public class Intake {
 		intake.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 		intake.configEncoderCodesPerRev(360);
 		intake.enableLimitSwitch(true, true);
-		intake.setPID(1, 0, 0);
+		intake.setPID(P, I, D);
 		intake.enableBrakeMode(false);
 		intake.setSafetyEnabled(true);
 		intake.enable();

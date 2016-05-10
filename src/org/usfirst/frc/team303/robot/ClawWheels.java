@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.CANTalon;
 public class ClawWheels {
    CANTalon clawWheelL;
    CANTalon clawWheelR;
-   double P = 1;
-   double I = 0;
-   double D = 0;
+   double P = 0.1;
+   double I = 0.003;
+   double D = 0.75;
    
    public ClawWheels() {
 	   clawWheelL = new CANTalon(RobotMap.LCLAWWHEEL);
