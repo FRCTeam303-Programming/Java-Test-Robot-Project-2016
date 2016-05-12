@@ -4,6 +4,7 @@ import org.usfirst.frc.team303.robot.RobotMap;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.I2C;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -49,5 +50,10 @@ public class Drivebase {
 		navXYaw = navX.getYaw();
 		lDriveEncDist = lDriveEnc.getDistance();
 		rDriveEncDist = rDriveEnc.getDistance();
+		
+		SmartDashboard.putNumber("NavXYaw", navXYaw);
+		SmartDashboard.putNumber("lDriveEncDist", lDriveEncDist);
+		SmartDashboard.putNumber("rDriveEncDist", rDriveEncDist);
+		
 	}
 }

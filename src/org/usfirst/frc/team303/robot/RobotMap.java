@@ -14,11 +14,12 @@ public class RobotMap {
 	public static final boolean CLAW_INV = false;
 	public static final int INTAKE = 10;
 	public static final boolean INTAKE_INV = true;
-	public static final int LCLAWWHEEL = 0;
-	public static final int RCLAWWHEEL = 0;
-	public static final boolean LCLAWWHEEL_INV = false;
-	public static final boolean RCLAWWHEEL_INV = false;
-	public static final int INTAKEWHEELS = 0;
+	public static final int LCLAWWHEEL = 2;
+	public static final int RCLAWWHEEL = 5;
+	public static final boolean LCLAWWHEEL_INV = true;
+	public static final boolean RCLAWWHEEL_INV = true;
+	public static final int INTAKEWHEELS = 6;
+	public static final boolean INTAKEWHEELS_INV = false;
 	
 
 }

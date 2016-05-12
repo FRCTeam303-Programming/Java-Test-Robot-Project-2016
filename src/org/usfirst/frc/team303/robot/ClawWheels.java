@@ -6,7 +6,7 @@ public class ClawWheels {
    CANTalon clawWheelL;
    CANTalon clawWheelR;
    double P = 0.1;
-   double I = 0.003;
+   double I = 0.001;
    double D = 0.75;
    
    public ClawWheels() {
@@ -37,15 +37,37 @@ public class ClawWheels {
 	   if(Robot.oi.xboxBtnA)
 			return 0;
 		else if(Robot.oi.xboxBtnB)
-			return 0;
+			return 1800;
 		else if(Robot.oi.xboxBtnX)
-			return 0;
+			return 2000;
 		else if(Robot.oi.xboxBtnY)
 			return 0;
 		else return oldwheels;
    }
    
-   public double clawWheelsCtrl(double oldwheels) {
-	   return 0;
+   public double realClawWheelsCtrl(double oldwheels, double clawRotation, double clawSetpoint) {
+	   double wheelSetpoint = xboxWheelCtrl(oldwheels);
+	   
+	   if((wheelSetpoint==0) && (Robot.oi.lStickBtn4 || Robot.oi.lStickBtn2)) {
+		   if(Robot.oi.lStickBtn4 ^ Robot.oi.lStickBtn2) {
+			   if(Robot.oi.lStickBtn4)
+				   return 2000;
+			   else if(Robot.oi.lStickBtn2)
+				   return -2000;
+			   else return 0;
+		   }
+		   else return 0;
+	   }
+	   else {
+		   if((clawRotation - 0.0075<=clawSetpoint) && (clawRotation + 0.0075>=clawSetpoint)) {
+			   return wheelSetpoint;
+		   }
+		   else return 500;
+	   }
+   }
+   
+   public void clawWheelsSet(double setpoint) {
+	   clawWheelL.set(setpoint);
+	   clawWheelR.set(setpoint);
    }
 }

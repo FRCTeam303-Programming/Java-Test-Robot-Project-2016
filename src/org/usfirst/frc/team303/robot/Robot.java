@@ -24,8 +24,9 @@ public class Robot extends IterativeRobot {
     String autoSelected;
     SendableChooser chooser;
     static double clawSetpoint = 0;
-    static double cntakeSetpoint = 0;
+    static double intakeSetpoint = 0;
     static double clawWheelSetpoint = 0;
+    static double clawRotation = 0;
     
     /*
      * These objects may have to be moved to robotInit() or to Robot() constructor. 
@@ -34,6 +35,8 @@ public class Robot extends IterativeRobot {
 	static Intake intake = new Intake();
 	static Drivebase drivebase = new Drivebase();
 	static OI oi = new OI();
+	static ClawWheels clawwheels = new ClawWheels();
+	static IntakeWheels intakewheels = new IntakeWheels();
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -47,6 +50,8 @@ public class Robot extends IterativeRobot {
         claw.clawInit(); //runs methods relating to configuring PID loops and encoders
         intake.intakeInit(); //runs methods relating to configuring PID loops and encoders
         oi.OIInit(); //runs methods relating to joystick creation
+        clawwheels.ClawWheelsInit();
+        intakewheels.intakeWheelsInit();
     }
     
 	/**
@@ -79,6 +84,11 @@ public class Robot extends IterativeRobot {
     	}
     }
 
+    
+    public void teleopInit() {
+    	clawSetpoint = 0;
+    }
+    
     /**
      * This function is called periodically during operator control
      */
@@ -86,9 +96,20 @@ public class Robot extends IterativeRobot {
     	oi.updateJoyValues();                             //updates joystick values
     	drivebase.updateSensors();                        //updates drive encoders and navX
         drivebase.drive(oi.lStickY, oi.rStickY);          //drive the robot based on inputs from OI
+        
+        clawRotation = claw.clawGetCheck(); //does tasks for the claw that happen periodically: INCLUDING GETTING CLAW ROTATION
         clawSetpoint = claw.xboxClawCtrl(clawSetpoint);   //update the clawsetpoint
         claw.clawSet(clawSetpoint);	  //tell claw to go to setpoint
-        claw.checkForZero(); //does nothing yet
+        SmartDashboard.putNumber("clawSetpoint", clawSetpoint);
+        
+        intakeSetpoint = intake.intakeCtrl(intakeSetpoint, 0.08); //update intake setpoint
+        SmartDashboard.putNumber("intakeSetpoint", intakeSetpoint);
+        intake.intakeSet(intakeSetpoint); //tell intake to go to setpoint
+        
+        intakewheels.set(intakewheels.intakeWheelsCtrl());
+        
+        clawWheelSetpoint = clawwheels.realClawWheelsCtrl(clawWheelSetpoint, clawRotation, clawSetpoint); //magically figures out what the wheel setpoint should be
+        clawwheels.clawWheelsSet(clawWheelSetpoint); //tell claw wheels to go to setpoint
     }
     
     /**

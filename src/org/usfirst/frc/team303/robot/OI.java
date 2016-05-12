@@ -1,6 +1,7 @@
 package org.usfirst.frc.team303.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OI {
 final int LSTICK_PORT = 0;
@@ -10,7 +11,9 @@ Joystick lStick;
 Joystick rStick;
 Joystick xbox;
 double lStickY;
+double lStickX;
 double rStickY;
+double rStickX;
 double xboxLStickY;
 double xboxLTrigger;
 double xboxRTrigger;
@@ -23,6 +26,7 @@ boolean lStickBtn5;
 boolean lStickBtn6;
 boolean lStickBtn7;
 boolean lStickBtn8;
+boolean lStickBtn9;
 boolean rStickBtn0;
 boolean rStickBtn1;
 boolean rStickBtn2;
@@ -32,6 +36,7 @@ boolean rStickBtn5;
 boolean rStickBtn6;
 boolean rStickBtn7;
 boolean rStickBtn8;
+boolean rStickBtn9;
 boolean xboxBtnA;
 boolean xboxBtnB;
 boolean xboxBtnX;
@@ -46,12 +51,12 @@ boolean xboxRStickPressed;
 	public void OIInit() {
 		 xbox = new Joystick(XBOX_PORT);
 		 rStick = new Joystick(RSTICK_PORT);
-		 lStick = new Joystick(RSTICK_PORT);
+		 lStick = new Joystick(LSTICK_PORT);
 	}
 	
 	public void updateJoyValues() {
 		lStickY = lStick.getRawAxis(1);
-		lStickBtn0 = lStick.getRawButton(0);
+		lStickX = lStick.getRawAxis(0);
 		lStickBtn1 = lStick.getRawButton(1);
 		lStickBtn2 = lStick.getRawButton(2);
 		lStickBtn3 = lStick.getRawButton(3);
@@ -59,9 +64,8 @@ boolean xboxRStickPressed;
 		lStickBtn5 = lStick.getRawButton(5);
 		lStickBtn6 = lStick.getRawButton(6);
 		lStickBtn7 = lStick.getRawButton(7);
-		lStickBtn8 = lStick.getRawButton(8);
-		rStickY = rStick.getRawAxis(1);
-		rStickBtn0 = rStick.getRawButton(0);
+		rStickY = (-1*(rStick.getRawAxis(1)));
+		rStickX = rStick.getRawAxis(0);
 		rStickBtn1 = rStick.getRawButton(1);
 		rStickBtn2 = rStick.getRawButton(2);
 		rStickBtn3 = rStick.getRawButton(3);
@@ -69,19 +73,19 @@ boolean xboxRStickPressed;
 		rStickBtn5 = rStick.getRawButton(5);
 		rStickBtn6 = rStick.getRawButton(6);
 		rStickBtn7 = rStick.getRawButton(7);
-		rStickBtn8 = rStick.getRawButton(8);
 		xboxLStickY = xbox.getRawAxis(1);
 		xboxRStickPressed = xbox.getRawButton(9);
-		xboxBtnA = xbox.getRawButton(0);
-		xboxBtnB = xbox.getRawButton(1);
-		xboxBtnX = xbox.getRawButton(2);
-		xboxBtnY = xbox.getRawButton(3);
-		xboxBtnStart = xbox.getRawButton(7);
-		xboxBtnBack = xbox.getRawButton(6);
-		xboxBtnLBumper = xbox.getRawButton(4);
-		xboxBtnRBumper = xbox.getRawButton(5);
+		xboxBtnA = xbox.getRawButton(1);
+		xboxBtnB = xbox.getRawButton(2);
+		xboxBtnX = xbox.getRawButton(3);
+		xboxBtnY = xbox.getRawButton(4);
+		xboxBtnStart = xbox.getRawButton(8);
+		xboxBtnBack = xbox.getRawButton(9);
+		xboxBtnLBumper = xbox.getRawButton(5);
+		xboxBtnRBumper = xbox.getRawButton(6);
 		xboxLTrigger = xbox.getRawAxis(2);
 		xboxRTrigger = xbox.getRawAxis(3);
+		SmartDashboard.putNumber("XboxLStickY", xboxLStickY);
 	}
 	
 }
