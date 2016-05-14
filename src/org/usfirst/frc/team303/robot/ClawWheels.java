@@ -59,7 +59,7 @@ public class ClawWheels {
 		   else return 0;
 	   }
 	   else {
-		   if((clawRotation - 0.0075<=clawSetpoint) && (clawRotation + 0.0075>=clawSetpoint)) {
+		   if(((clawRotation - 0.0075)<=clawSetpoint) && ((clawRotation + 0.0075)>=clawSetpoint)) {
 			   return wheelSetpoint;
 		   }
 		   else return 500;
@@ -68,6 +68,6 @@ public class ClawWheels {
    
    public void clawWheelsSet(double setpoint) {
 	   clawWheelL.set(setpoint);
-	   clawWheelR.set(setpoint);
+	   clawWheelR.set(-1*(setpoint));
    }
 }
