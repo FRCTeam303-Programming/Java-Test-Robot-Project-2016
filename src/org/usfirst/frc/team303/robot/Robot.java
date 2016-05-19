@@ -37,6 +37,8 @@ public class Robot extends IterativeRobot {
 	static OI oi = new OI();
 	static ClawWheels clawwheels = new ClawWheels();
 	static IntakeWheels intakewheels = new IntakeWheels();
+	static Pneumatics pneumatics = new Pneumatics();
+	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -52,6 +54,7 @@ public class Robot extends IterativeRobot {
         oi.OIInit(); //runs methods relating to joystick creation
         clawwheels.ClawWheelsInit();
         intakewheels.intakeWheelsInit();
+        pneumatics.pneumaticsInit();
     }
     
 	/**
@@ -98,7 +101,7 @@ public class Robot extends IterativeRobot {
         drivebase.drive(oi.lStickY, oi.rStickY);          //drive the robot based on inputs from OI
         
         clawRotation = claw.clawGetCheck(); //does tasks for the claw that happen periodically: INCLUDING GETTING CLAW ROTATION
-        clawSetpoint = claw.xboxClawCtrl(clawSetpoint);   //update the clawsetpoint
+        clawSetpoint = claw.xboxClawCtrl(clawSetpoint);   //update the clawsetpoint and check limit switch
         claw.clawSet(clawSetpoint);	  //tell claw to go to setpoint
         SmartDashboard.putNumber("clawSetpoint", clawSetpoint);
         
@@ -108,8 +111,13 @@ public class Robot extends IterativeRobot {
         
         intakewheels.set(intakewheels.intakeWheelsCtrl());
         
+        pneumatics.pneumaticsCtrl(oi.xboxBtnRBumper, oi.lStickBtn1);
+        
+        SmartDashboard.putNumber("BEFORE wheelSetpoint", clawWheelSetpoint);
+        clawWheelSetpoint = clawwheels.xboxWheelCtrl(clawWheelSetpoint);
         clawWheelSetpoint = clawwheels.realClawWheelsCtrl(clawWheelSetpoint, clawRotation, clawSetpoint); //magically figures out what the wheel setpoint should be
         clawwheels.clawWheelsSet(clawWheelSetpoint); //tell claw wheels to go to setpoint
+        SmartDashboard.putNumber("wheelSetpoint", clawWheelSetpoint);
     }
     
     /**

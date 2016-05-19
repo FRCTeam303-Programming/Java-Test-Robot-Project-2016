@@ -85,7 +85,7 @@ String rStickBtnArrayString;
 		xboxBtnRBumper = xbox.getRawButton(6);
 		xboxLTrigger = xbox.getRawAxis(2);
 		xboxRTrigger = xbox.getRawAxis(3);
-		
+		/*
 		for(int i=1;i<8;i++)
 		{
 			lStickBtnArray[i] = stickBtnReturn(true, i);
@@ -101,7 +101,7 @@ String rStickBtnArrayString;
 		
 		rStickBtnArrayString = Arrays.toString(rStickBtnArray);
 		SmartDashboard.putString("rStickBtnArray", rStickBtnArrayString);
-		
+		*/
 	}
 	
 	/**

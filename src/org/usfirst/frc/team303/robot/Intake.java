@@ -40,8 +40,8 @@ public class Intake {
 		else if(Robot.oi.rStickBtn5) {
 			return setpoint + magnitude;
 		}
-		else if(Robot.oi.rStickBtn1) {
-			return -0.56;
+		else if(Robot.oi.lStickBtn4) {
+			return 0.56;
 		}
 		else if(setpoint>2.5) {
 			return 0.2254;

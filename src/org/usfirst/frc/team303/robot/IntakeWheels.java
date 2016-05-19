@@ -16,10 +16,10 @@ CANTalon intakeWheels;
 	}
 	
 	public double intakeWheelsCtrl() {
-		if((Robot.oi.lStickBtn5 ||Robot.oi.lStickBtn3||Robot.oi.lStickBtn1)&&!(Robot.oi.lStickBtn5 &&Robot.oi.lStickBtn3)&&!(Robot.oi.lStickBtn5 &&Robot.oi.lStickBtn1)&&!(Robot.oi.lStickBtn3 &&Robot.oi.lStickBtn1)) {
+		if((Robot.oi.lStickBtn5 ||Robot.oi.lStickBtn3||Robot.oi.lStickBtn2)&&!(Robot.oi.lStickBtn5 &&Robot.oi.lStickBtn3)&&!(Robot.oi.lStickBtn5 &&Robot.oi.lStickBtn2)&&!(Robot.oi.lStickBtn3 &&Robot.oi.lStickBtn2)) {
 			if(Robot.oi.lStickBtn3)
 				return 1;
-			else if (Robot.oi.lStickBtn5 || Robot.oi.lStickBtn1)
+			else if (Robot.oi.lStickBtn5 || Robot.oi.lStickBtn2)
 				return -1;
 			else return 0;
 		}

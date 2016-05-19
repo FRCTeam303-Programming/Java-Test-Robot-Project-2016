@@ -1,13 +1,20 @@
 package org.usfirst.frc.team303.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ClawWheels {
    CANTalon clawWheelL;
    CANTalon clawWheelR;
-   double P = 0.1;
-   double I = 0.001;
-   double D = 0.75;
+   double LP = 0.2;
+   double LI = 0.00000; //0.001
+   double LD = 0.01;  //0.75
+   
+   double RP = 0.15;
+   double RI = 0.00000; //0.001
+   double RD = 0.01;  //0.75
+   double speedL = 0;
+   double speedR = 0;
    
    public ClawWheels() {
 	   clawWheelL = new CANTalon(RobotMap.LCLAWWHEEL);
@@ -18,16 +25,14 @@ public class ClawWheels {
 	   clawWheelL.changeControlMode(CANTalon.TalonControlMode.Speed);
 	   clawWheelL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 	   clawWheelL.configEncoderCodesPerRev(360);
-	   clawWheelL.enableLimitSwitch(true, true);
-	   clawWheelL.setPID(P, I, D);
+	   clawWheelL.setPID(LP, LI, LD);
 	   clawWheelL.enableBrakeMode(false);
 	   clawWheelL.setSafetyEnabled(true);
 	   clawWheelL.enable();
 	   clawWheelR.changeControlMode(CANTalon.TalonControlMode.Speed);
 	   clawWheelR.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 	   clawWheelR.configEncoderCodesPerRev(360);
-	   clawWheelR.enableLimitSwitch(true, true);
-	   clawWheelR.setPID(P, I, D);
+	   clawWheelR.setPID(RP, RI, RD);
 	   clawWheelR.enableBrakeMode(false);
 	   clawWheelR.setSafetyEnabled(true);
 	   clawWheelR.enable();
@@ -37,33 +42,46 @@ public class ClawWheels {
 	   if(Robot.oi.xboxBtnA)
 			return 0;
 		else if(Robot.oi.xboxBtnB)
-			return 1800;
+			return 5000;
 		else if(Robot.oi.xboxBtnX)
-			return 2000;
+			return 20000;
 		else if(Robot.oi.xboxBtnY)
 			return 0;
 		else return oldwheels;
    }
    
    public double realClawWheelsCtrl(double oldwheels, double clawRotation, double clawSetpoint) {
-	   double wheelSetpoint = xboxWheelCtrl(oldwheels);
+	   double wheelSetpoint = oldwheels;
 	   
-	   if((wheelSetpoint==0) && (Robot.oi.lStickBtn4 || Robot.oi.lStickBtn2)) {
-		   if(Robot.oi.lStickBtn4 ^ Robot.oi.lStickBtn2) {
-			   if(Robot.oi.lStickBtn4)
-				   return 2000;
-			   else if(Robot.oi.lStickBtn2)
-				   return -2000;
-			   else return 0;
+	   speedL = clawWheelL.getSpeed();
+	   speedR = clawWheelR.getSpeed();
+	   SmartDashboard.putNumber("L Speed", speedL);
+	   SmartDashboard.putNumber("R Speed", speedR);
+	   
+	   if((Robot.oi.lStickBtn3 || Robot.oi.lStickBtn2)) {
+		   if(Robot.oi.lStickBtn3 ^ Robot.oi.lStickBtn2) {
+			   if(Robot.oi.lStickBtn2)
+				   return -4000;
+			   else if(Robot.oi.lStickBtn3)
+				   return 4000;
+			   else {return 0;} //never reached
 		   }
-		   else return 0;
+		   else {return 0;} //never reached
 	   }
 	   else {
-		   if(((clawRotation - 0.0075)<=clawSetpoint) && ((clawRotation + 0.0075)>=clawSetpoint)) {
-			   return wheelSetpoint;
+		   if(((clawRotation - 0.05)<=clawSetpoint) && ((clawRotation + 0.05)>=clawSetpoint)) {
+			   SmartDashboard.putBoolean("test", true);
+			   if(clawRotation<-0.06) {
+				   return wheelSetpoint;
+			   }
+			   else {return 0;} //default case?
 		   }
-		   else return 500;
+		   else {
+			   SmartDashboard.putBoolean("test", false);
+			   return -2000;
+		   }
 	   }
+	   
    }
    
    public void clawWheelsSet(double setpoint) {

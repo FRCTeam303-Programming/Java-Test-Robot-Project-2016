@@ -13,7 +13,8 @@ public class Claw {
     double P = 10;
     double I = 0.0004;
     double D = 0.1;
-   
+    int limitSwitchI = 0;
+    
 	public Claw() {
 		 claw = new CANTalon(RobotMap.CLAW);
 	}
@@ -36,18 +37,27 @@ public class Claw {
 	}
 
 	public double xboxClawCtrl(double oldclaw) {
-		if(Robot.oi.xboxBtnA)
+		if(limitSwitchI>=11) {
+			limitSwitchI = 0;
+		}
+		else {limitSwitchI++;}
+		
+		SmartDashboard.putNumber("i", limitSwitchI);
+		
+		if(claw.isFwdLimitSwitchClosed() && limitSwitchI>=10)
+			return 0;
+		else if(Robot.oi.xboxBtnA)
 			return -0.015;
 		else if(Robot.oi.xboxBtnB)
-			return -0.0685;
+			return -0.20;
 		else if(Robot.oi.xboxBtnX)
-			return -0.06;
+			return -0.17;
 		else if(Robot.oi.xboxBtnY)
 			return oldclaw;
 		else if((Robot.oi.xboxLStickY)>0.75)
-			return oldclaw + 0.005;
-		else if((Robot.oi.xboxLStickY)<-0.75)
 			return oldclaw - 0.005;
+		else if((Robot.oi.xboxLStickY)<-0.75)
+			return oldclaw + 0.005;
 		else return oldclaw;
 	}
 	
