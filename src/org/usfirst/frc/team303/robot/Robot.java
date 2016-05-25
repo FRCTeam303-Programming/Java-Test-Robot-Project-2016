@@ -9,6 +9,7 @@ import org.usfirst.frc.team303.robot.Claw;
 import org.usfirst.frc.team303.robot.Intake;
 import org.usfirst.frc.team303.robot.RobotMap;
 import org.usfirst.frc.team303.robot.Drivebase;
+import edu.wpi.first.wpilibj.networktables.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,9 +21,11 @@ import org.usfirst.frc.team303.robot.Drivebase;
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
     final String defaultAuto = "Default";
-    final String customAuto = "My Auto";
-    String autoSelected;
-    SendableChooser chooser;
+    final String lowBar = "Low Bar";
+    final String rockWall = "Rock Wall / Rough Terrain";
+    String autoSelected1;
+    SendableChooser chooser1;
+    SendableChooser chooser2;
     static double clawSetpoint = 0;
     static double intakeSetpoint = 0;
     static double clawWheelSetpoint = 0;
@@ -44,10 +47,12 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", defaultAuto);
-        chooser.addObject("My Auto", customAuto);
-        SmartDashboard.putData("Auto choices", chooser);
+        chooser1 = new SendableChooser();
+        chooser1.addDefault("Default Auto", defaultAuto);
+        chooser1.addObject("Low Bar", lowBar);
+        chooser1.addObject("Rock Wall / Rough Terrain", rockWall);
+        SmartDashboard.putData("Auto choices", chooser1);
+        
         drivebase.drivebaseInit(); //runs methods relating to configuring motor direction and encoders
         claw.clawInit(); //runs methods relating to configuring PID loops and encoders
         intake.intakeInit(); //runs methods relating to configuring PID loops and encoders
@@ -67,20 +72,24 @@ public class Robot extends IterativeRobot {
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
     public void autonomousInit() {
-    	autoSelected = (String) chooser.getSelected();
+    	autoSelected1 = (String) chooser1.getSelected();
 //		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
+		System.out.println("Auto selected: " + autoSelected1);
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    	switch(autoSelected) {
-    	case customAuto:
-        //Put custom auto code here   
+    	Autonomous autoRunner = new Autonomous();
+    	switch(autoSelected1) {
+    	case lowBar:
+    		autoRunner.lowBarAuto();
             break;
-    	case defaultAuto:
+    	case rockWall:
+    	//Put rock wall / rough terrain code here
+    		autoRunner.rockWallAuto();
+    		break;
     	default:
     	//Put default auto code here
             break;

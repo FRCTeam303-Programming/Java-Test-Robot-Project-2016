@@ -1,8 +1,7 @@
 package org.usfirst.frc.team303.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.util.Arrays;
+
 
 public class OI {
 final int LSTICK_PORT = 0;
@@ -85,23 +84,6 @@ String rStickBtnArrayString;
 		xboxBtnRBumper = xbox.getRawButton(6);
 		xboxLTrigger = xbox.getRawAxis(2);
 		xboxRTrigger = xbox.getRawAxis(3);
-		/*
-		for(int i=1;i<8;i++)
-		{
-			lStickBtnArray[i] = stickBtnReturn(true, i);
-		}
-		
-		for (int i=1;i<8;i++)
-		{
-			rStickBtnArray[i] = stickBtnReturn(false, i);
-		}
-		
-		lStickBtnArrayString = Arrays.toString(lStickBtnArray);
-		SmartDashboard.putString("lStickBtnArray", lStickBtnArrayString);
-		
-		rStickBtnArrayString = Arrays.toString(rStickBtnArray);
-		SmartDashboard.putString("rStickBtnArray", rStickBtnArrayString);
-		*/
 	}
 	
 	/**
