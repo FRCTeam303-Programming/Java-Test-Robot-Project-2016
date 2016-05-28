@@ -8,34 +8,45 @@ public class Autonomous {
 	public void lowBarAuto() {
 		putClawDown();
 		Robot.pneumatics.gearShift.set(false);
-		moveForwardSeconds(1500);
+		driveStraightEncoder(500, 0.7, 0.01, -0.15); //encoderTicks, powSetpoint, tuningConstant, intakePos
 	}
 	
 	public void rockWallAuto() {
 		putClawDown();
+		Robot.pneumatics.gearShift.set(true);
+		driveStraightEncoder(800, 0.75, 0.01, -0.15); //encoderTicks, powSetpoint, tuningConstant, intakePos
+		Robot.pneumatics.gearShift.set(false);
+	}
+	
+	public void featureTest() {
+		putClawDown();
+		driveStraightEncoder(250, 0.7, 0.01, -0.15); //encoderTicks, powSetpoint, tuningConstant, intakePos
+		turnDownForNavX(90, 0.65, true, -0.15); //degrees, speed, left?, intakePos
 	}
 	
 	
-	
 	// HELPER METHODS BELOW
-	public void moveForwardSeconds(double seconds) {
+	public void driveForwardSeconds(double seconds) {
 		Timer timer = new Timer();
 		timer.start();
 		double startTime = timer.get();
 		
 		while((startTime + seconds) >= timer.get()) {
 			Robot.drivebase.drive(0.75, 0.75);
+			//System.out.println("running");
+			Timer.delay(0.05);
+			if(endAuto()) {break;}
 		}
 		Robot.drivebase.drive(0, 0);
 		timer.stop();
 	}
 	
-	public void moveForwardEncoder(double encoderTicks) {
-		Robot.drivebase.updateSensors();
+	public void driveForwardEncoder(double encoderTicks) {
 		double encStart = Robot.drivebase.rDriveEnc.getDistance();
 		while((encStart + encoderTicks) >= Robot.drivebase.rDriveEnc.getDistance()) {
 			Robot.drivebase.drive(0.75, 0.75);
-			Robot.drivebase.updateSensors();
+			Timer.delay(0.05);
+			if(endAuto()) {break;}
 		}
 		Robot.drivebase.drive(0, 0);
 	}
@@ -47,29 +58,76 @@ public class Autonomous {
 		while(!Robot.claw.claw.isFwdLimitSwitchClosed()) { //this method complains about static access
 			Robot.claw.clawSet(clawStart + acc);
 			acc = acc + 0.0001;
+			Timer.delay(0.05);
+			if(endAuto()) {break;}
 		}
 	}
 	
-	public void turnDownForNavX(double degrees) { //TODO finish this method- copy from LabVIEW
-		Robot.drivebase.updateSensors();
+	public void turnDownForNavX(double degrees, double speed, boolean left, double intakePos) {
 		double navXStart = Robot.drivebase.navX.getYaw();
+		double initAngle = navXStart + degrees;
+		double objectiveAngle = ((initAngle > -180) && (initAngle < 180)) ? initAngle : ((initAngle < 180) ? (initAngle + 360) : (initAngle - 360));
+		double lSpeed;
+		double rSpeed;
+		
+		if(left) {
+			lSpeed = speed*-1;
+			rSpeed = speed;
+		}
+		else {
+			lSpeed = speed;
+			rSpeed = speed*-1;
+		}
+		while(inRange((objectiveAngle + 2), (objectiveAngle - 2), Robot.drivebase.navX.getYaw())) {
+			Robot.drivebase.drive(lSpeed, rSpeed);
+			Robot.intake.intake.set(intakePos);
+			Timer.delay(0.01);
+			if(endAuto()) {break;}
+		}
+		Robot.drivebase.drive(0, 0);
+	}
+
+	public boolean endAuto() {
+		return (Robot.autoTimer.get() > 14);
+	}
+
+	public void driveStraightAngle(double powSetpoint, double angleDifference, double tuningConstant) {
+		double modifier = angleDifference * tuningConstant;
+		double Lpower = powSetpoint + modifier;
+		double Rpower = powSetpoint - modifier;
+		Robot.drivebase.drive(Lpower, Rpower);
+	}
+
+	public void driveStraightSeconds(double seconds, double powSetpoint, double tuningConstant, double intakePos) {
+		double navXStart = Robot.drivebase.navX.getYaw();
+		Timer timer = new Timer();
+		timer.start();
+		double timerStart = timer.get();
+		while(!((timer.get() - timerStart) > seconds)) {
+			driveStraightAngle(powSetpoint, (Robot.drivebase.navX.getYaw() - navXStart), tuningConstant);
+			Robot.intake.intake.set(intakePos);
+			Timer.delay(0.05);
+			if(endAuto()) {break;}
+		}
+		Robot.drivebase.drive(0, 0);
+		timer.stop();
 	}
 	
+	public void driveStraightEncoder(double encoderTicks, double powSetpoint, double tuningConstant, double intakePos) {
+		double navXStart = Robot.drivebase.navX.getYaw();
+		double encoderStart = Robot.drivebase.rDriveEnc.getDistance();
+		while(!((java.lang.Math.abs(Robot.drivebase.rDriveEnc.getDistance() - encoderStart)) > encoderTicks)) {
+			driveStraightAngle(powSetpoint, (Robot.drivebase.navX.getYaw() - navXStart), tuningConstant);
+			Robot.intake.intake.set(intakePos);
+			Timer.delay(0.05);
+			if(endAuto()) {break;}
+		}
+		Robot.drivebase.drive(0, 0);
+	}
+	
+	public boolean inRange(double northBound, double southBound, double X) {
+		return ((X > southBound) && (X < northBound));
+	}
+	
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

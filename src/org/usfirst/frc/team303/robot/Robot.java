@@ -23,6 +23,7 @@ public class Robot extends IterativeRobot {
     final String defaultAuto = "Default";
     final String lowBar = "Low Bar";
     final String rockWall = "Rock Wall / Rough Terrain";
+    final String featureTest = "Feature Test";
     String autoSelected1;
     SendableChooser chooser1;
     SendableChooser chooser2;
@@ -30,6 +31,7 @@ public class Robot extends IterativeRobot {
     static double intakeSetpoint = 0;
     static double clawWheelSetpoint = 0;
     static double clawRotation = 0;
+    static Timer autoTimer;
     
     /*
      * These objects may have to be moved to robotInit() or to Robot() constructor. 
@@ -51,6 +53,7 @@ public class Robot extends IterativeRobot {
         chooser1.addDefault("Default Auto", defaultAuto);
         chooser1.addObject("Low Bar", lowBar);
         chooser1.addObject("Rock Wall / Rough Terrain", rockWall);
+        chooser1.addObject("Feature Test", featureTest);
         SmartDashboard.putData("Auto choices", chooser1);
         
         drivebase.drivebaseInit(); //runs methods relating to configuring motor direction and encoders
@@ -72,28 +75,34 @@ public class Robot extends IterativeRobot {
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
     public void autonomousInit() {
+    	autoTimer = new Timer();
+    	autoTimer.start();
     	autoSelected1 = (String) chooser1.getSelected();
-//		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected1);
+	
+		Thread autoThread = new Thread(); {
+			Autonomous autoRunner = new Autonomous();
+			switch(autoSelected1) {
+			case lowBar:
+				autoRunner.lowBarAuto();
+				break;
+			case rockWall:
+				//Put rock wall / rough terrain code here
+				autoRunner.rockWallAuto();
+				break;
+			default:
+				//Put default auto code here
+				break;
+			}
+    	}
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    	Autonomous autoRunner = new Autonomous();
-    	switch(autoSelected1) {
-    	case lowBar:
-    		autoRunner.lowBarAuto();
-            break;
-    	case rockWall:
-    	//Put rock wall / rough terrain code here
-    		autoRunner.rockWallAuto();
-    		break;
-    	default:
-    	//Put default auto code here
-            break;
-    	}
+    	drivebase.updateSensors();
+    	claw.clawGetCheck();
     }
 
     

@@ -43,7 +43,7 @@ public class Intake {
 		else if(Robot.oi.lStickBtn4) {
 			return 0.56;
 		}
-		else if(setpoint>2.5) {
+		else if(setpoint>2.5) { //TODO retest this constant b/c conflicting values r/n
 			return 0.2254;
 		}
 		else if(setpoint<-1.07) {

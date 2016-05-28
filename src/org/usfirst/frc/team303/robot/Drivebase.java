@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.I2C;
-
 import com.kauailabs.navx.frc.AHRS;
-//import com.kauailabs.navx.*;
 
 public class Drivebase {
 	CANTalon FL;
