@@ -2,7 +2,32 @@ package org.usfirst.frc.team303.robot;
 
 import edu.wpi.first.wpilibj.Timer;
 
-public class Autonomous {
+public class Autonomous extends Thread {
+	
+	
+	public void run() {
+		switch(Robot.autoSelected1) {
+		case Robot.lowBar:
+			lowBarAuto();
+			break;
+		case Robot.rockWall:
+			//Put rock wall / rough terrain code here
+			rockWallAuto();
+			break;
+		case Robot.featureTest:
+			//Put feature test code here
+			featureTest();
+			break;
+		default:
+			//Put default auto code here
+			break;
+		}
+		
+		System.out.println("doge approves of incorrect multi-threading.");
+		interrupt();
+		
+	}
+	
 	
 	//MAIN METHODS BELOW
 	public void lowBarAuto() {

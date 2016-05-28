@@ -20,13 +20,13 @@ import edu.wpi.first.wpilibj.networktables.*;
  */
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
-    final String defaultAuto = "Default";
-    final String lowBar = "Low Bar";
-    final String rockWall = "Rock Wall / Rough Terrain";
-    final String featureTest = "Feature Test";
-    String autoSelected1;
-    SendableChooser chooser1;
-    SendableChooser chooser2;
+    final static String defaultAuto = "Default";
+    final static String lowBar = "Low Bar";
+    final static String rockWall = "Rock Wall / Rough Terrain";
+    final static String featureTest = "Feature Test";
+    static String autoSelected1;
+    static SendableChooser chooser1;
+    static SendableChooser chooser2;
     static double clawSetpoint = 0;
     static double intakeSetpoint = 0;
     static double clawWheelSetpoint = 0;
@@ -80,21 +80,10 @@ public class Robot extends IterativeRobot {
     	autoSelected1 = (String) chooser1.getSelected();
 		System.out.println("Auto selected: " + autoSelected1);
 	
-		Thread autoThread = new Thread(); {
-			Autonomous autoRunner = new Autonomous();
-			switch(autoSelected1) {
-			case lowBar:
-				autoRunner.lowBarAuto();
-				break;
-			case rockWall:
-				//Put rock wall / rough terrain code here
-				autoRunner.rockWallAuto();
-				break;
-			default:
-				//Put default auto code here
-				break;
-			}
-    	}
+		Thread autoThread = new Autonomous();
+		autoThread.setPriority(Thread.MAX_PRIORITY);
+		autoThread.start();
+		System.out.println("main thread continued. success?");
     }
 
     /**
