@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ClawWheels {
    CANTalon clawWheelL;
    CANTalon clawWheelR;
-   double LP = 0.2;
+   double LP = 0.15;
    double LI = 0.00000; //0.001
    double LD = 0.01;  //0.75
    

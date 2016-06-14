@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Autonomous extends Thread {
 	
+	//instead of timer.delay(x), what about thread.wait(x) ?
 	
 	public void run() {
 		switch(Robot.autoSelected1) {
@@ -117,10 +118,7 @@ public class Autonomous extends Thread {
 	}
 
 	public void driveStraightAngle(double powSetpoint, double angleDifference, double tuningConstant) {
-		double modifier = angleDifference * tuningConstant;
-		double Lpower = powSetpoint + modifier;
-		double Rpower = powSetpoint - modifier;
-		Robot.drivebase.drive(Lpower, Rpower);
+		Robot.drivebase.drive((powSetpoint + (angleDifference*tuningConstant)), (powSetpoint - (angleDifference*tuningConstant)));
 	}
 
 	public void driveStraightSeconds(double seconds, double powSetpoint, double tuningConstant, double intakePos) {

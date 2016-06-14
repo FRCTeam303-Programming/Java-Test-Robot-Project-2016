@@ -32,6 +32,7 @@ public class Robot extends IterativeRobot {
     static double clawWheelSetpoint = 0;
     static double clawRotation = 0;
     static Timer autoTimer;
+    static Thread autoThread;
     
     /*
      * These objects may have to be moved to robotInit() or to Robot() constructor. 
@@ -80,10 +81,10 @@ public class Robot extends IterativeRobot {
     	autoSelected1 = (String) chooser1.getSelected();
 		System.out.println("Auto selected: " + autoSelected1);
 	
-		Thread autoThread = new Autonomous();
+		autoThread = new Autonomous();
 		autoThread.setPriority(Thread.MAX_PRIORITY);
 		autoThread.start();
-		System.out.println("main thread continued. success?");
+		System.out.println("main thread continued. success?"); 
     }
 
     /**
@@ -96,6 +97,7 @@ public class Robot extends IterativeRobot {
 
     
     public void teleopInit() {
+    	autoThread.interrupt();
     	clawSetpoint = 0;
     }
     
