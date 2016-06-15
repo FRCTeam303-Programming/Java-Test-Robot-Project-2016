@@ -1,8 +1,16 @@
 package org.usfirst.frc.team303.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class DashboardVision {
 	static double navXSetpoint;
 	static double encoderSetpoint;
+	double iGain = 0;
+	double dGain = 0;
+	double oldNavXSetpoint = 0;
+	boolean solvedX = false;
+	boolean solvedY = false;
+	boolean resetIGain = false;
 	
 	public DashboardVision() {
 		//is there any code that needs to run once?
@@ -17,8 +25,10 @@ public class DashboardVision {
 		double[] visionValues = {navXSetpoint, encoderSetpoint};
 		return visionValues;
 	}
-	
+	//this method is complete
 	public double[] navXVisionSub() {
+		double yFwdPow = 0.45;
+		
 		double[] leftRight = {0, 0};
 		double pidOutput = 0;
 		
@@ -29,26 +39,52 @@ public class DashboardVision {
 		double xPidI = 0.005;
 		double xPidD = 0; //this is supposed to be zero
 		
-		double xNumFeed = navXSetpoint - currentNavX;
-		double yNumFeed = encoderSetpoint - currentEncoder;
+		//double xNumFeed = navXSetpoint - currentNavX;
+		//double yNumFeed = encoderSetpoint - currentEncoder;
 		boolean xBoolFeed = inRange(navXSetpoint, currentNavX, navXSetpoint, 0.5);
 		boolean yBoolFeed = inRange(encoderSetpoint, currentEncoder, encoderSetpoint, 20);
 		boolean yGreaterThanSetpoint = (currentEncoder>encoderSetpoint);
 		boolean yLessThanSetpoint = (currentEncoder<encoderSetpoint);
-		
+	
 		if(xBoolFeed && yBoolFeed) {
-			//code for pidOutput will go here
-			
-			
-			//this stuff goes at the end of the X pid calculation
-			leftRight = arcadeMap(pidOutput, 1, 0);
-			leftRight = rectifyArcadeDrive(leftRight[0], leftRight[1]);
-			return leftRight;
+			if(yBoolFeed) {
+				if(xBoolFeed) {
+					pidOutput = 0;
+				}
+				else {
+					iGain = (resetIGain) ? navXSetpoint : navXSetpoint + iGain;
+					dGain = navXSetpoint - oldNavXSetpoint;
+					
+					double P = navXSetpoint*xPidP;
+					double I = iGain*xPidI;
+					double D = dGain*xPidD; 
+					
+					resetIGain = false;
+					navXSetpoint = oldNavXSetpoint;
+					pidOutput = P+I+D;
+				}
+				
+				//this stuff goes at the end of the X pid calculation
+				leftRight = arcadeMap(pidOutput, 1, 0);
+				leftRight = rectifyArcadeDrive(leftRight[0], leftRight[1]);
+				return leftRight;
+			}
+			else {
+				if(yLessThanSetpoint) {
+					return new double[] {yFwdPow, yFwdPow};
+				}
+				else {
+					if(yGreaterThanSetpoint) {
+						return new double[] {-1*yFwdPow, -1*yFwdPow};
+					}
+					else {
+						return new double[] {0, 0};
+					}
+				}
+			}
 		}
 		else {
-			//this ELSE STATEMENT is complete
-			double[] zero = {0, 0};
-			return zero;
+			return new double[] {0, 0};
 		}
 		
 	}
@@ -94,4 +130,7 @@ public class DashboardVision {
 		return leftRight;
 	}
 	
+	public void resetI() {
+		resetIGain = true;
+	}
 }

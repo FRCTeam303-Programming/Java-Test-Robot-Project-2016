@@ -31,8 +31,10 @@ public class Robot extends IterativeRobot {
     static double intakeSetpoint = 0;
     static double clawWheelSetpoint = 0;
     static double clawRotation = 0;
+    static double[] visionMotors = {0, 0};
     static Timer autoTimer;
     static Thread autoThread;
+    static int rectLeft = 0, rectRight = 0, rectTop = 0, rectBottom = 0;
     
     /*
      * These objects may have to be moved to robotInit() or to Robot() constructor. 
@@ -44,6 +46,7 @@ public class Robot extends IterativeRobot {
 	static ClawWheels clawwheels = new ClawWheels();
 	static IntakeWheels intakewheels = new IntakeWheels();
 	static Pneumatics pneumatics = new Pneumatics();
+	static DashboardVision vision = new DashboardVision();
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -97,7 +100,7 @@ public class Robot extends IterativeRobot {
 
     
     public void teleopInit() {
-    	autoThread.interrupt();
+    //	autoThread.interrupt();
     	clawSetpoint = 0;
     }
     
@@ -107,7 +110,23 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	oi.updateJoyValues();                             //updates joystick values
     	drivebase.updateSensors();                        //updates drive encoders and navX
-        drivebase.drive(oi.lStickY, oi.rStickY);          //drive the robot based on inputs from OI
+    	
+    	if(oi.xboxBtnBack) {
+    		rectTop = (int) SmartDashboard.getNumber("TOP");
+    		rectBottom = (int) SmartDashboard.getNumber("BOTTOM");
+    		rectLeft = (int) SmartDashboard.getNumber("LEFT");
+    		rectRight = (int) SmartDashboard.getNumber("RIGHT");
+    		vision.calculateSetpoints(rectLeft, rectRight, rectTop, rectBottom);
+    	}
+    	
+    	
+    	if(oi.xboxBtnLBumper) {
+    		visionMotors = vision.navXVisionSub();
+    		drivebase.drive(visionMotors[0], visionMotors[1]);
+    	}
+    	else {
+    		drivebase.drive(oi.lStickY, oi.rStickY); //drive the robot based on inputs from OI
+    	}
         
         clawRotation = claw.clawGetCheck(); //does tasks for the claw that happen periodically: INCLUDING GETTING CLAW ROTATION
         clawSetpoint = claw.xboxClawCtrl(clawSetpoint);   //update the clawsetpoint and check limit switch
