@@ -20,21 +20,15 @@ import edu.wpi.first.wpilibj.networktables.*;
  */
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
-    final static String defaultAuto = "Default";
-    final static String lowBar = "Low Bar";
-    final static String rockWall = "Rock Wall / Rough Terrain";
-    final static String featureTest = "Feature Test";
+    final static String defaultAuto = "Default", lowBar = "Low Bar", rockWall = "Rock Wall / Rough Terrain", featureTest = "Feature Test";
     static String autoSelected1;
-    static SendableChooser chooser1;
-    static SendableChooser chooser2;
-    static double clawSetpoint = 0;
-    static double intakeSetpoint = 0;
-    static double clawWheelSetpoint = 0;
-    static double clawRotation = 0;
+    static SendableChooser chooser1, chooser2;
+    static double clawSetpoint = 0, intakeSetpoint = 0, clawWheelSetpoint = 0, clawRotation = 0;
     static double[] visionMotors = {0, 0};
     static Timer autoTimer;
     static Thread autoThread;
     static int rectLeft = 0, rectRight = 0, rectTop = 0, rectBottom = 0;
+    static double[] visionSetpoints = {0, 0};
     
     /*
      * These objects may have to be moved to robotInit() or to Robot() constructor. 
@@ -78,7 +72,7 @@ public class Robot extends IterativeRobot {
 	 * You can add additional auto modes by adding additional comparisons to the switch structure below with additional strings.
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
-    public void autonomousInit() {
+    public void autonomousInit() { //auto threading is currently broken. talk to someone who knows threading? 
     	autoTimer = new Timer();
     	autoTimer.start();
     	autoSelected1 = (String) chooser1.getSelected();
@@ -112,15 +106,16 @@ public class Robot extends IterativeRobot {
     	drivebase.updateSensors();                        //updates drive encoders and navX
     	
     	if(oi.xboxBtnBack) {
-    		rectTop = (int) SmartDashboard.getNumber("TOP");
-    		rectBottom = (int) SmartDashboard.getNumber("BOTTOM");
-    		rectLeft = (int) SmartDashboard.getNumber("LEFT");
-    		rectRight = (int) SmartDashboard.getNumber("RIGHT");
-    		vision.calculateSetpoints(rectLeft, rectRight, rectTop, rectBottom);
+    		rectTop = (int) SmartDashboard.getNumber("/rectangle/TOP");
+    		rectBottom = (int) SmartDashboard.getNumber("/rectangle/BOTTOM");
+    		rectLeft = (int) SmartDashboard.getNumber("/rectangle/LEFT");
+    		rectRight = (int) SmartDashboard.getNumber("/rectangle/RIGHT");
+    		visionSetpoints = vision.calculateSetpoints(rectLeft, rectRight, rectTop, rectBottom);
     	}
     	
     	
     	if(oi.xboxBtnLBumper) {
+    		vision.resetI();
     		visionMotors = vision.navXVisionSub();
     		drivebase.drive(visionMotors[0], visionMotors[1]);
     	}

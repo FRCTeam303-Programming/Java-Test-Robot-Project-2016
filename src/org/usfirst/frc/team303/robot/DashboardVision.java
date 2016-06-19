@@ -1,16 +1,20 @@
 package org.usfirst.frc.team303.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 
 public class DashboardVision {
 	static double navXSetpoint;
 	static double encoderSetpoint;
 	double iGain = 0;
 	double dGain = 0;
-	double oldNavXSetpoint = 0;
+	double oldError = 0;
 	boolean solvedX = false;
 	boolean solvedY = false;
 	boolean resetIGain = false;
+	
+	boolean log1 = false;
+	boolean log2 = false;
+	boolean current = false;
 	
 	public DashboardVision() {
 		//is there any code that needs to run once?
@@ -22,6 +26,10 @@ public class DashboardVision {
 		int yIdealPixel = 26;	
 		navXSetpoint = (((xIdealPixel-((rectLeft+rectRight)/2))*-0.18659375)+Robot.drivebase.navX.getYaw());
 		encoderSetpoint = (((yIdealPixel-((rectTop+rectBottom)/2))*0.09)+Robot.drivebase.lDriveEnc.getDistance());
+		
+		SmartDashboard.putNumber("NavX Setpoint", navXSetpoint);
+		SmartDashboard.putNumber("Encoder Setpoint", encoderSetpoint);
+		
 		double[] visionValues = {navXSetpoint, encoderSetpoint};
 		return visionValues;
 	}
@@ -34,10 +42,12 @@ public class DashboardVision {
 		
 		double currentEncoder = -1*(Robot.drivebase.lDriveEnc.getDistance());
 		double currentNavX = Robot.drivebase.navX.getYaw();
+		double error = navXSetpoint - currentNavX;
+		
 		
 		double xPidP = 0.035;
 		double xPidI = 0.005;
-		double xPidD = 0; //this is supposed to be zero
+		double xPidD = 0; //this is zero on purpose
 		
 		//double xNumFeed = navXSetpoint - currentNavX;
 		//double yNumFeed = encoderSetpoint - currentEncoder;
@@ -51,16 +61,21 @@ public class DashboardVision {
 				if(xBoolFeed) {
 					pidOutput = 0;
 				}
-				else {
-					iGain = (resetIGain) ? navXSetpoint : navXSetpoint + iGain;
-					dGain = navXSetpoint - oldNavXSetpoint;
+				else { 
+					//this is the mock PID stuff for x vision
+					//it worked in labview, but is untested in java
 					
-					double P = navXSetpoint*xPidP;
+					
+					
+					iGain = (resetIGain) ? error : error + iGain;
+					dGain = error - oldError;
+					
+					double P = error*xPidP;
 					double I = iGain*xPidI;
 					double D = dGain*xPidD; 
 					
 					resetIGain = false;
-					navXSetpoint = oldNavXSetpoint;
+					oldError = error;
 					pidOutput = P+I+D;
 				}
 				
@@ -131,6 +146,11 @@ public class DashboardVision {
 	}
 	
 	public void resetI() {
-		resetIGain = true;
+		log2 = log1;
+		log1 = current;
+		current = Robot.oi.xboxBtnLBumper;
+		
+		resetIGain = (current&&log1&&(!(log2==current)));
+		SmartDashboard.putBoolean("I GAIN RESET", resetIGain);
 	}
 }
