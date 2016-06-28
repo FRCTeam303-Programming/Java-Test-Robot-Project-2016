@@ -1,8 +1,7 @@
-
 package org.usfirst.frc.team303.robot;
-
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Utility;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team303.robot.Claw;
@@ -25,8 +24,12 @@ public class Robot extends IterativeRobot {
     static SendableChooser chooser1, chooser2;
     static double clawSetpoint = 0, intakeSetpoint = 0, clawWheelSetpoint = 0, clawRotation = 0;
     static double[] visionMotors = {0, 0};
-    static Timer autoTimer;
-    static Thread autoThread;
+    
+    static double autoInitialNavX;
+    static Timer autoTimer = new Timer();
+    static double startTime = 0;
+    static int autoCount = 0;
+    
     static int rectLeft = 0, rectRight = 0, rectTop = 0, rectBottom = 0;
     static double[] visionSetpoints = {0, 0};
     
@@ -41,6 +44,7 @@ public class Robot extends IterativeRobot {
 	static IntakeWheels intakewheels = new IntakeWheels();
 	static Pneumatics pneumatics = new Pneumatics();
 	static DashboardVision vision = new DashboardVision();
+	static Autonomous auto = new Autonomous();
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -72,16 +76,16 @@ public class Robot extends IterativeRobot {
 	 * You can add additional auto modes by adding additional comparisons to the switch structure below with additional strings.
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
-    public void autonomousInit() { //auto threading is currently broken. talk to someone who knows threading? 
+    public void autonomousInit() {
     	autoTimer = new Timer();
     	autoTimer.start();
     	autoSelected1 = (String) chooser1.getSelected();
 		System.out.println("Auto selected: " + autoSelected1);
 	
-		autoThread = new Autonomous();
-		autoThread.setPriority(Thread.MAX_PRIORITY);
-		autoThread.start();
-		System.out.println("main thread continued. success?"); 
+		autoTimer.start();
+		startTime = autoTimer.get();
+		autoInitialNavX = drivebase.navX.getYaw();
+		
     }
 
     /**
@@ -90,12 +94,13 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
     	drivebase.updateSensors();
     	claw.clawGetCheck();
+    	auto.run();
     }
 
     
     public void teleopInit() {
-    //	autoThread.interrupt();
     	clawSetpoint = 0;
+    	autoCount = 0;
     }
     
     /**
@@ -105,7 +110,7 @@ public class Robot extends IterativeRobot {
     	oi.updateJoyValues();                             //updates joystick values
     	drivebase.updateSensors();                        //updates drive encoders and navX
     	
-    	if(oi.xboxBtnBack) {
+    	if(oi.xboxBtnBack) { //vision control part 1
     		rectTop = (int) SmartDashboard.getNumber("/rectangle/TOP");
     		rectBottom = (int) SmartDashboard.getNumber("/rectangle/BOTTOM");
     		rectLeft = (int) SmartDashboard.getNumber("/rectangle/LEFT");
@@ -114,7 +119,7 @@ public class Robot extends IterativeRobot {
     	}
     	
     	
-    	if(oi.xboxBtnLBumper) {
+    	if(oi.xboxBtnLBumper) { //vision control part 2
     		vision.resetI();
     		visionMotors = vision.navXVisionSub();
     		drivebase.drive(visionMotors[0], visionMotors[1]);
@@ -127,6 +132,11 @@ public class Robot extends IterativeRobot {
         clawSetpoint = claw.xboxClawCtrl(clawSetpoint);   //update the clawsetpoint and check limit switch
         claw.clawSet(clawSetpoint);	  //tell claw to go to setpoint
         SmartDashboard.putNumber("clawSetpoint", clawSetpoint);
+        
+        if(Utility.getUserButton() || oi.rStickBtn6) { //zeros the intake encoder- setpoint is zeroed in intakeCtrl()
+        	intake.intakeEncZero();
+        	intakeSetpoint = 0;
+        }
         
         intakeSetpoint = intake.intakeCtrl(intakeSetpoint, 0.08); //update intake setpoint
         SmartDashboard.putNumber("intakeSetpoint", intakeSetpoint);
@@ -141,6 +151,19 @@ public class Robot extends IterativeRobot {
         clawWheelSetpoint = clawwheels.realClawWheelsCtrl(clawWheelSetpoint, clawRotation, clawSetpoint); //magically figures out what the wheel setpoint should be
         clawwheels.clawWheelsSet(clawWheelSetpoint); //tell claw wheels to go to setpoint
         SmartDashboard.putNumber("wheelSetpoint", clawWheelSetpoint);
+    }
+    
+    public void disabledPeriodic() {
+    	
+    	if(Utility.getUserButton()) {
+    		intake.intakeEncZero();
+    		intakeSetpoint = 0;
+    		SmartDashboard.putString("intake reset", "INTAKE RESET");
+    	}
+    	else {
+    		SmartDashboard.putString("intake reset", "INTAKE SUSTAINED");
+    	}
+    	
     }
     
     /**
