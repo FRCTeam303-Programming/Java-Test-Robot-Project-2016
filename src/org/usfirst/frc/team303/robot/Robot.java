@@ -140,6 +140,7 @@ public class Robot extends IterativeRobot {
         	intakeSetpoint = 0;
         }
         intake.intakeSet(intakeSetpoint); //tell intake to go to setpoint
+        intake.lastChance(); //if intake position is beyond limits, set it to before the limit
      
         /*intake wheels*/
         intakewheels.set(intakewheels.intakeWheelsCtrl());

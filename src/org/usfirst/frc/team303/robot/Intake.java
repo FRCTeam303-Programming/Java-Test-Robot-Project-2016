@@ -8,6 +8,8 @@ public class Intake {
 	double P = 1.5;
 	double I = 0;
 	double D = 0.1;
+	double ballSetpoint = 0.56;
+	double verticalSetpoint = 2.0;
 	
 	public Intake() {
 		intake = new CANTalon(RobotMap.INTAKE);
@@ -33,26 +35,65 @@ public class Intake {
 		intake.setEncPosition(0);
 	}
 	
-	
-	public double intakeCtrl(double setpoint, double magnitude) {
-		if(setpoint>2.5) { //TODO retest this constant
-			return 2.5;
-		}
-		else if(setpoint<-0.2) {
-			return -0.2;
-		}
-		else if(Robot.oi.rStickBtn5) {
+	public double forceDown(double setpoint, double magnitude) {
+		if(Robot.oi.rStickBtn5) {
 			return setpoint - magnitude;
 		}
-		else if(Robot.oi.rStickBtn3) {
+		else if(Robot.oi.lStickBtn4) {
+			return ballSetpoint;
+		}
+		else if(Robot.oi.rStickBtn4) {
+			return verticalSetpoint;
+		}
+		else {return setpoint;}
+	}
+	
+	public double forceUp(double setpoint, double magnitude) {
+		if(Robot.oi.rStickBtn3) {
 			return setpoint + magnitude;
 		}
 		else if(Robot.oi.lStickBtn4) {
-			return 0.56;
+			return ballSetpoint;
 		}
 		else if(Robot.oi.rStickBtn4) {
-			return 2.0;
+			return verticalSetpoint;
 		}
 		else {return setpoint;}
+	}
+	
+	public double intakeCtrl(double setpoint, double magnitude) {
+	
+		if(setpoint<2.4 && setpoint>-0.1) {
+			if(Robot.oi.rStickBtn5) {
+				return setpoint - magnitude;
+			}
+			else if(Robot.oi.rStickBtn3) {
+				return setpoint + magnitude;
+			}
+			else if(Robot.oi.lStickBtn4) {
+				return ballSetpoint;
+			}
+			else if(Robot.oi.rStickBtn4) {
+				return verticalSetpoint;
+			}
+			else {return setpoint;}
+		}
+		else if(setpoint>2.4){
+			return forceDown(setpoint, magnitude);
+		}
+		else if(setpoint<-0.1) {
+			return forceUp(setpoint, magnitude);
+		}
+		else {return setpoint;}
+		
+	}
+	
+	public void lastChance() {
+		if(intake.getEncPosition()<2.5) {
+			intake.set(2.4);
+		}
+		if(intake.getEncPosition()>-0.2) {
+			intake.set(-0.1);
+		}
 	}
 }
