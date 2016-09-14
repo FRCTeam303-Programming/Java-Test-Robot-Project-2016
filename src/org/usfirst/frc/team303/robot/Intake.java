@@ -88,12 +88,4 @@ public class Intake {
 		
 	}
 	
-	public void lastChance() {
-		if(intake.getEncPosition()<2.5) {
-			intake.set(2.4);
-		}
-		if(intake.getEncPosition()>-0.2) {
-			intake.set(-0.1);
-		}
-	}
 }
