@@ -35,7 +35,13 @@ public class Intake {
 	
 	
 	public double intakeCtrl(double setpoint, double magnitude) {
-		if(Robot.oi.rStickBtn5) {
+		if(setpoint>2.5) { //TODO retest this constant
+			return 2.5;
+		}
+		else if(setpoint<-0.2) {
+			return -0.2;
+		}
+		else if(Robot.oi.rStickBtn5) {
 			return setpoint - magnitude;
 		}
 		else if(Robot.oi.rStickBtn3) {
@@ -46,12 +52,6 @@ public class Intake {
 		}
 		else if(Robot.oi.rStickBtn4) {
 			return 2.0;
-		}
-		else if(setpoint>2.5) { //TODO retest this constant
-			return 2.5;
-		}
-		else if(setpoint<-0.2) {
-			return -0.2;
 		}
 		else {return setpoint;}
 	}
