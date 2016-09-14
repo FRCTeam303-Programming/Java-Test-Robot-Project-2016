@@ -47,14 +47,11 @@ public class Intake {
 		else if(Robot.oi.rStickBtn4) {
 			return 2.0;
 		}
-		else if(setpoint>2.5) { //TODO retest this constant b/c conflicting values r/n
+		else if(setpoint>2.5) { //TODO retest this constant
 			return 2.5;
 		}
 		else if(setpoint<-0.2) {
 			return -0.2;
-		}
-		else if(Utility.getUserButton()) {
-			return 0;
 		}
 		else {return setpoint;}
 	}

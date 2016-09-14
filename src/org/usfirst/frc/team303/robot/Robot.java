@@ -26,8 +26,6 @@ public class Robot extends IterativeRobot {
     static double[] visionMotors = {0, 0};
     
     static double autoInitialNavX;
-    static Timer autoTimer = new Timer();
-    static double startTime = 0;
     static int autoCount = 0;
     
     static int rectLeft = 0, rectRight = 0, rectTop = 0, rectBottom = 0;
@@ -77,13 +75,8 @@ public class Robot extends IterativeRobot {
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
     public void autonomousInit() {
-    	autoTimer = new Timer();
-    	autoTimer.start();
     	autoSelected1 = (String) chooser1.getSelected();
 		System.out.println("Auto selected: " + autoSelected1);
-	
-		autoTimer.start();
-		startTime = autoTimer.get();
 		autoInitialNavX = drivebase.navX.getYaw();
 		
     }
@@ -110,6 +103,7 @@ public class Robot extends IterativeRobot {
     	oi.updateJoyValues();                             //updates joystick values
     	drivebase.updateSensors();                        //updates drive encoders and navX
     	
+    	/*
     	if(oi.xboxBtnBack) { //vision control part 1
     		rectTop = (int) SmartDashboard.getNumber("/rectangle/TOP");
     		rectBottom = (int) SmartDashboard.getNumber("/rectangle/BOTTOM");
@@ -127,25 +121,33 @@ public class Robot extends IterativeRobot {
     	else {
     		drivebase.drive(oi.lStickY, oi.rStickY); //drive the robot based on inputs from OI
     	}
-        
+        */
+    	
+    	/*drivebase*/
+    	drivebase.drive(oi.lStickY, oi.rStickY);
+ 
+    	/*claw*/
         clawRotation = claw.clawGetCheck(); //does tasks for the claw that happen periodically: INCLUDING GETTING CLAW ROTATION
         clawSetpoint = claw.xboxClawCtrl(clawSetpoint);   //update the clawsetpoint and check limit switch
         claw.clawSet(clawSetpoint);	  //tell claw to go to setpoint
         SmartDashboard.putNumber("clawSetpoint", clawSetpoint);
         
-        if(Utility.getUserButton() || oi.rStickBtn6) { //zeros the intake encoder- setpoint is zeroed in intakeCtrl()
+        /*intake*/
+        intakeSetpoint = intake.intakeCtrl(intakeSetpoint, 0.08); //update intake setpoint
+        SmartDashboard.putNumber("intakeSetpoint", intakeSetpoint);
+        if(Utility.getUserButton()) { //zeros the intake encoder- setpoint is zeroed in intakeCtrl()
         	intake.intakeEncZero();
         	intakeSetpoint = 0;
         }
-        
-        intakeSetpoint = intake.intakeCtrl(intakeSetpoint, 0.08); //update intake setpoint
-        SmartDashboard.putNumber("intakeSetpoint", intakeSetpoint);
         intake.intakeSet(intakeSetpoint); //tell intake to go to setpoint
-        
+     
+        /*intake wheels*/
         intakewheels.set(intakewheels.intakeWheelsCtrl());
         
+        /*pneumatics*/
         pneumatics.pneumaticsCtrl(oi.xboxBtnRBumper, oi.lStickBtn1);
         
+        /*claw wheels*/
         SmartDashboard.putNumber("BEFORE wheelSetpoint", clawWheelSetpoint);
         clawWheelSetpoint = clawwheels.xboxWheelCtrl(clawWheelSetpoint);
         clawWheelSetpoint = clawwheels.realClawWheelsCtrl(clawWheelSetpoint, clawRotation, clawSetpoint); //magically figures out what the wheel setpoint should be
