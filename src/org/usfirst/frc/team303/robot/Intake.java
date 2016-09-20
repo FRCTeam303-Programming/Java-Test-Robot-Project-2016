@@ -1,7 +1,6 @@
 package org.usfirst.frc.team303.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.Utility;
 
 public class Intake {
 	CANTalon intake;
@@ -78,7 +77,7 @@ public class Intake {
 			}
 			else {return setpoint;}
 		}
-		else if(setpoint>2.4){
+		else if((setpoint>=2.4)){
 			return forceDown(setpoint, magnitude);
 		}
 		else if(setpoint<-0.1) {

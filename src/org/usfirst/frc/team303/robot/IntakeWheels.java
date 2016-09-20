@@ -14,7 +14,7 @@ CANTalon intakeWheels;
 		intakeWheels.setInverted(RobotMap.INTAKEWHEELS_INV);
 		intakeWheels.setSafetyEnabled(true);
 	}
-	
+	//
 	public double intakeWheelsCtrl() {
 		if((Robot.oi.lStickBtn5 ||Robot.oi.lStickBtn3||Robot.oi.lStickBtn2)&&!(Robot.oi.lStickBtn5 &&Robot.oi.lStickBtn3)&&!(Robot.oi.lStickBtn5 &&Robot.oi.lStickBtn2)&&!(Robot.oi.lStickBtn3 &&Robot.oi.lStickBtn2)) {
 			if(Robot.oi.lStickBtn3)

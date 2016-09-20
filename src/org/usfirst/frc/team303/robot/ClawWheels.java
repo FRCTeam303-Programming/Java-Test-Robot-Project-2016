@@ -21,7 +21,7 @@ public class ClawWheels {
 	   clawWheelR = new CANTalon(RobotMap.RCLAWWHEEL);
    }
    
-   public void ClawWheelsInit() {
+   public void clawWheelsInit() {
 	   clawWheelL.changeControlMode(CANTalon.TalonControlMode.Speed);
 	   clawWheelL.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 	   clawWheelL.configEncoderCodesPerRev(360);
@@ -29,6 +29,7 @@ public class ClawWheels {
 	   clawWheelL.enableBrakeMode(false);
 	   clawWheelL.setSafetyEnabled(true);
 	   clawWheelL.enable();
+	   
 	   clawWheelR.changeControlMode(CANTalon.TalonControlMode.Speed);
 	   clawWheelR.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 	   clawWheelR.configEncoderCodesPerRev(360);

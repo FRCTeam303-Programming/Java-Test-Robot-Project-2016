@@ -60,7 +60,7 @@ public class Robot extends IterativeRobot {
         claw.clawInit(); //runs methods relating to configuring PID loops and encoders
         intake.intakeInit(); //runs methods relating to configuring PID loops and encoders
         oi.OIInit(); //runs methods relating to joystick creation
-        clawwheels.ClawWheelsInit();
+        clawwheels.clawWheelsInit();
         intakewheels.intakeWheelsInit();
         pneumatics.pneumaticsInit();
     }
@@ -135,7 +135,7 @@ public class Robot extends IterativeRobot {
         /*intake*/
         intakeSetpoint = intake.intakeCtrl(intakeSetpoint, 0.08); //update intake setpoint
         SmartDashboard.putNumber("intakeSetpoint", intakeSetpoint);
-        if(Utility.getUserButton()) { //zeros the intake encoder- setpoint is zeroed in intakeCtrl()
+        if(Utility.getUserButton()) { //zeros the intake encoder
         	intake.intakeEncZero();
         	intakeSetpoint = 0;
         }

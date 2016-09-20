@@ -45,13 +45,11 @@ public class Autonomous {
 	
 	// HELPER METHODS BELOW
 	public void driveForwardSeconds(double seconds) {
-		
 		if((Robot.autoCount) <= (seconds/20)) {
 			Robot.drivebase.drive(-0.80, 0.80);
 		}
 		else {
 			Robot.drivebase.drive(0, 0);
-			Robot.autoTimer.stop();
 		}
 		Robot.autoCount++;
 	}
