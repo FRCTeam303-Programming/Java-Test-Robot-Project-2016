@@ -4,7 +4,7 @@ import org.usfirst.frc.team303.robot.Robot;
 import org.usfirst.frc.team303.robot.RobotMap;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//this is a test comment for Egit
+
 /**
  *
  */
@@ -65,7 +65,7 @@ public class Claw {
 		double clawPos = claw.getPosition();
 		SmartDashboard.putNumber("Claw Rotation", clawPos);
 		SmartDashboard.putBoolean("FwdLimit", claw.isFwdLimitSwitchClosed());
-		if(claw.isFwdLimitSwitchClosed())	//TODO move this to a different method
+		if(claw.isFwdLimitSwitchClosed())	//move this to a different method? nah
 			claw.setEncPosition(0);
 		
 		return clawPos;

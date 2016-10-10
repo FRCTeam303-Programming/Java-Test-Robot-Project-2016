@@ -36,6 +36,7 @@ public class ClawWheels {
 	   clawWheelR.setPID(RP, RI, RD);
 	   clawWheelR.enableBrakeMode(false);
 	   clawWheelR.setSafetyEnabled(true);
+	   clawWheelR.setInverted(true);
 	   clawWheelR.enable();
    }
    
