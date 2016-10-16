@@ -14,7 +14,7 @@ public class Autonomous2 {
 	*/
 	
 	Timer mainS = new Timer();
-	static double navXStart = Robot.drivebase.navXYaw;
+	double navXStart = Robot.drivebase.navXYaw;
 	double totalDeltaYaw = 0;
 	double oldNavX = 0;
 	double newNavX = 0;
@@ -56,18 +56,26 @@ public class Autonomous2 {
 			if(i>0) {
 				nDeltaYaw[i] = nDeltaYaw[i-1] + (nSwitch[i+1] - nSwitch[i]);
 			}
+			else if(i==nSwitch.length) {
+				nDeltaYaw[i] = 0;
+			}
 			else {nDeltaYaw[i] = nSwitch[i+1];}
 		}
 		
 		mainS.start();
 	}
 	
+	public enum timeType {
+		SECONDS, ENCODERS, NAVX
+	}
+	
+	
 	//tier 1 methods 
 	public void assembleAutonomousOne() { 
 		
-		segmentsCompleted[0] = getSegmentsFinished("s", 0);
-		segmentsCompleted[1] = getSegmentsFinished("e", 1);
-		segmentsCompleted[2] = getSegmentsFinished("n", 2);
+		segmentsCompleted[0] = getSegmentsFinished(timeType.SECONDS, 0);
+		segmentsCompleted[1] = getSegmentsFinished(timeType.ENCODERS, 1);
+		segmentsCompleted[2] = getSegmentsFinished(timeType.NAVX, 2);
 				
 		if(timeBySeconds(1, 0)) { //part 1
 			driveForwardNoCorrection(0.80, 0.80);
@@ -82,7 +90,7 @@ public class Autonomous2 {
 	}
 	
     //tier 2 methods
-	//tier 2 method parameters run by 'name(upper target, int currentOperation)'
+	//tier 2 method parameters run by 'name(upperTarget, currentOperation)'
 	
 	public boolean timeByEncoders(int eHigh, int currentOperation) { //used for delta encoders
 		return (checkSegmentsFinished(currentOperation) && isBetween(Math.abs(Robot.drivebase.lDriveEncDist), 0, eSwitch[eHigh])); //used for encoder distance)
@@ -93,21 +101,21 @@ public class Autonomous2 {
 	}
 	
 	public boolean timeByNavX(int nTarget, int currentOperation) { //used for delta navX
-		return (checkSegmentsFinished(currentOperation) && isBetween(Robot.drivebase.navXYaw, nSwitch[nTarget]-2, nSwitch[nTarget]+2));
+		return (checkSegmentsFinished(currentOperation) && isBetween(Robot.drivebase.navXYaw, nSwitch[nTarget], nSwitch[nTarget]+2));
 	}
 	
 	
 	//tier 3 methods
 	
-	public boolean getSegmentsFinished(String esn, int number) {
-		switch(esn) {
-			case "s" : {
+	public boolean getSegmentsFinished(timeType var, int number) {
+		switch(var) {
+			case SECONDS : {
 				return (mainS.get()>sSwitch[number]);
 			}
-			case "e" : {
+			case ENCODERS : {
 				return (Math.abs(Robot.drivebase.lDriveEncDist)>eSwitch[number]);
 			}
-			case "n" : {
+			case NAVX : {
 				return (totalDeltaYaw>nDeltaYaw[number]);
 			}
 			default : {
