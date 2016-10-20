@@ -51,7 +51,7 @@ public class Claw {
 		else if(Robot.oi.xboxBtnB)
 			return -0.20;
 		else if(Robot.oi.xboxBtnX)
-			return -0.17;
+			return -0.21;
 		else if(Robot.oi.xboxBtnY)
 			return oldclaw;
 		else if((Robot.oi.xboxLStickY)>0.75)

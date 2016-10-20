@@ -28,6 +28,7 @@ public class ClawWheels {
 	   clawWheelL.setPID(LP, LI, LD);
 	   clawWheelL.enableBrakeMode(false);
 	   clawWheelL.setSafetyEnabled(true);
+	   clawWheelL.setInverted(false);
 	   clawWheelL.enable();
 	   
 	   clawWheelR.changeControlMode(CANTalon.TalonControlMode.Speed);
@@ -36,7 +37,7 @@ public class ClawWheels {
 	   clawWheelR.setPID(RP, RI, RD);
 	   clawWheelR.enableBrakeMode(false);
 	   clawWheelR.setSafetyEnabled(true);
-	   clawWheelR.setInverted(true);
+	   clawWheelR.setInverted(false);
 	   clawWheelR.enable();
    }
    

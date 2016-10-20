@@ -26,8 +26,14 @@ public class Autonomous2 {
 	boolean[] segmentsCompleted = {false, false, false, false, false, false};
 	
 	public void run() {
+		
+		oldNavX = newNavX;
+		newNavX = Robot.drivebase.navXYaw;
+		deltaNavX = newNavX - oldNavX;
+		totalDeltaYaw = totalDeltaYaw + (Math.abs(deltaNavX));
+		
 		switch(Robot.autoSelected1) {
-			case "1" : {
+			case "Feature Test" : {
 				assembleAutonomousOne();
 				break;
 			}	
@@ -38,10 +44,6 @@ public class Autonomous2 {
 				break;
 			}
 		}
-		oldNavX = newNavX;
-		newNavX = Robot.drivebase.navXYaw;
-		deltaNavX = newNavX - oldNavX;
-		totalDeltaYaw = totalDeltaYaw + (Math.abs(deltaNavX));
 	}
 	
 	public Autonomous2() {
@@ -53,15 +55,14 @@ public class Autonomous2 {
 		Robot.drivebase.rDriveEncDist = 0;
 		
 		for(int i=0;i<nSwitch.length;i++) {
-			if(i>0) {
-				nDeltaYaw[i] = nDeltaYaw[i-1] + (nSwitch[i+1] - nSwitch[i]);
-			}
-			else if(i==nSwitch.length) {
+			if(i==nSwitch.length - 1) {
 				nDeltaYaw[i] = 0;
+			}
+			else if(i>0) {
+				nDeltaYaw[i] = nDeltaYaw[i-1] + (nSwitch[i+1] - nSwitch[i]);
 			}
 			else {nDeltaYaw[i] = nSwitch[i+1];}
 		}
-		
 		mainS.start();
 	}
 	
@@ -125,12 +126,13 @@ public class Autonomous2 {
 	}
 	
 	public boolean checkSegmentsFinished(int currentOperation) {
-		for(int i=0;i<currentOperation;i++) {
+		return segmentsCompleted[currentOperation];
+		/* for(int i=0;i<currentOperation;i++) {
 			if(!segmentsCompleted[i]) {
 				return false;
 			}
 		}
-		return true;
+		return true; */
 	}
 	
 	public double angleCorrect(double theta) { //converts 0_to_360 to -180_to_180 scale
