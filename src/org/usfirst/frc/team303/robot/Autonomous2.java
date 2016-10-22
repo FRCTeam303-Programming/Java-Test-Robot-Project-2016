@@ -18,13 +18,15 @@ public class Autonomous2 {
 	double deltaNavX = 0;
 	int[] sSwitch = {0, 3, 6, 9, 15}; //stores seconds to switch autonomous parts
 	int[] eSwitch = {0, 300, 600, 900, 1500}; //stores encoder ticks to switch autonomous parts
+	boolean[] segmentsCompleted = {false, false, false, false, false, false, false};
 	double[] nSwitch = {navXStart, angleCorrect(navXStart+90), angleCorrect(navXStart+145)}; //stores objective angles for navX turning, used to switch autonomous parts
 	double[] nDeltaYaw = {0, 0, 0, 0, 0, 0}; // ex. first element is total space between element one and two of nSwitch
-	boolean[] segmentsCompleted = {false, false, false, false, false, false};
 	int sOp = 0;
 	int eOp = 0;
 	int nOp = 0;
 	int totalOp = 0;
+	int currentOp = 0;
+	timeType currentOpType;
 	
 	public void run() {
 		
@@ -32,6 +34,25 @@ public class Autonomous2 {
 		newNavX = Robot.drivebase.navXYaw;
 		deltaNavX = newNavX - oldNavX;
 		totalDeltaYaw = totalDeltaYaw + (Math.abs(deltaNavX));
+		
+		if(currentOp != getSegmentCountCompleted()) {
+			switch(currentOpType) {
+				case SECONDS : {
+					sOp++;
+					break;
+				}
+				case ENCODERS : {
+					eOp++;
+					break;
+				}
+				case NAVX : {
+					nOp++;
+					break;
+				}
+			}	
+		}
+		totalOp = sOp + eOp + nOp;
+		currentOp = getSegmentCountCompleted();
 		
 		switch(Robot.autoSelected1) {
 			case "Feature Test" : {
@@ -75,12 +96,7 @@ public class Autonomous2 {
 	//tier 1 methods 
 	//every part of an assembeAutonomous() has two parts: 
 	//the limiter (put in the condition of the if statement) and the driver (put in the body of the if statement). 
-	public void assembleAutonomousOne() { 
-		
-		segmentsCompleted[0] = figureSegmentFinished(timeType.SECONDS, 0);
-		segmentsCompleted[1] = figureSegmentFinished(timeType.ENCODERS, 1);
-		segmentsCompleted[2] = figureSegmentFinished(timeType.NAVX, 2);
-		totalOp = sOp + eOp + nOp;
+	public void assembleAutonomousOne() {
 		
 		if(timeBySeconds(1, 0)) { //part 1
 			driveForwardNoCorrection(0.80, 0.80);
@@ -97,20 +113,18 @@ public class Autonomous2 {
     //tier 2 methods
 	//tier 2 method parameters run by 'name(upperTarget, currentOperation)'
 	
-	/* tier 2 methods have two parts: the limiter (used in the isBetween(), basically a less than statement)
-	and the driver (used in checkSegmentsFinished(), basically a greater than statement)
-	possibly combine limiter and driver for tier 2 methods */
+	/* tier 2 methods have two parts: the < and the >. */
 	
 	public boolean timeByEncoders(int eHigh, int currentOperation) { //used for delta encoders
-		return (!getSegmentFinished(currentOperation) && (Math.abs(Robot.drivebase.lDriveEncDist) < eSwitch[eHigh])); //used for encoder distance)
+		return (!figureSegmentFinished(timeType.ENCODERS, currentOperation) && (Math.abs(Robot.drivebase.lDriveEncDist) < eSwitch[eHigh])); //used for encoder distance)
 	}
 	
 	public boolean timeBySeconds(int sHigh, int currentOperation) { //used for delta seconds
-		return (!getSegmentFinished(currentOperation) && (mainS.get() < sSwitch[sHigh]));
+		return (!figureSegmentFinished(timeType.SECONDS, currentOperation) && (mainS.get() < sSwitch[sHigh]));
 	}
 	
 	public boolean timeByNavX(int nTarget, int currentOperation) { //used for delta navX
-		return (!getSegmentFinished(currentOperation) && isBetween(Robot.drivebase.navXYaw, nSwitch[nTarget], nSwitch[nTarget]+2));
+		return (!figureSegmentFinished(timeType.NAVX, currentOperation) && isBetween(Robot.drivebase.navXYaw, nSwitch[nTarget], nSwitch[nTarget]+2));
 	}
 	
 	
@@ -119,16 +133,16 @@ public class Autonomous2 {
 	public boolean figureSegmentFinished(timeType var, int OpNum) { //adding 1 for conversion between op number and switches which start with 0
 		switch(var) {
 			case SECONDS : {
-				sOp++;
-				return (mainS.get()>sSwitch[(OpNum+1)-eOp-nOp]);
+				segmentsCompleted[OpNum] = (mainS.get()>sSwitch[(OpNum+1)-eOp-nOp]);
+				return segmentsCompleted[OpNum];
 			}
 			case ENCODERS : {
-				eOp++;
-				return (Math.abs(Robot.drivebase.lDriveEncDist)>eSwitch[(OpNum+1)-sOp-nOp]);
+				segmentsCompleted[OpNum] = (Math.abs(Robot.drivebase.lDriveEncDist)>eSwitch[(OpNum+1)-sOp-nOp]);
+				return segmentsCompleted[OpNum];
 			}
 			case NAVX : {
-				nOp++;
-				return (totalDeltaYaw>nDeltaYaw[(OpNum+1)-sOp-eOp]);
+				segmentsCompleted[OpNum] = (totalDeltaYaw>nDeltaYaw[(OpNum+1)-sOp-eOp]);
+				return segmentsCompleted[OpNum];
 			}
 			default : {
 				return false;
@@ -136,14 +150,14 @@ public class Autonomous2 {
 		}
 	}
 	
-	public boolean getSegmentFinished(int currentOperation) {
-		return segmentsCompleted[currentOperation];
-		/* for(int i=0;i<currentOperation;i++) {
-			if(!segmentsCompleted[i]) {
-				return false;
+	public int getSegmentCountCompleted() {
+		int numberTrue = 0;
+		for(int i=0;i<segmentsCompleted.length;i++) {
+			if(segmentsCompleted[i]) {
+				numberTrue++;
 			}
 		}
-		return true; */
+		return numberTrue;
 	}
 	
 	public double angleCorrect(double theta) { //converts 0_to_360 to -180_to_180 scale
