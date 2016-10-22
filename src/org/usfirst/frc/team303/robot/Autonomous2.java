@@ -27,6 +27,9 @@ public class Autonomous2 {
 	int totalOp = 0;
 	int currentOp = 0;
 	timeType currentOpType;
+	timeType[] opTypeListFeatureTest = {timeType.SECONDS, timeType.ENCODERS, timeType.NAVX};
+	timeType[] opTypeListLowBar;
+	timeType[] opTypeListRockWall;
 	
 	public void run() {
 		
@@ -35,24 +38,7 @@ public class Autonomous2 {
 		deltaNavX = newNavX - oldNavX;
 		totalDeltaYaw = totalDeltaYaw + (Math.abs(deltaNavX));
 		
-		if(currentOp != getSegmentCountCompleted()) {
-			switch(currentOpType) {
-				case SECONDS : {
-					sOp++;
-					break;
-				}
-				case ENCODERS : {
-					eOp++;
-					break;
-				}
-				case NAVX : {
-					nOp++;
-					break;
-				}
-			}	
-		}
-		totalOp = sOp + eOp + nOp;
-		currentOp = getSegmentCountCompleted();
+		updateIndexes();
 		
 		switch(Robot.autoSelected1) {
 			case "Feature Test" : {
@@ -149,6 +135,45 @@ public class Autonomous2 {
 			}
 		}
 	}
+	
+	public void updateIndexes() {
+		if(currentOp != getSegmentCountCompleted()) {
+
+			switch(Robot.autoSelected1) {
+				case "Feature Test" : {
+					currentOpType = opTypeListFeatureTest[currentOp];
+					break;
+				}
+				case "Low Bar" : {
+					currentOpType = opTypeListLowBar[currentOp];
+					break;
+				}
+				case "Rock Wall" : {
+					currentOpType = opTypeListRockWall[currentOp];
+					break;
+				}
+			}
+			
+			switch(currentOpType) {
+				case SECONDS : {
+					sOp++;
+					break;
+				}
+				case ENCODERS : {
+					eOp++;
+					break;
+				}
+				case NAVX : {
+					nOp++;
+					break;
+				}
+			}
+		}
+		totalOp = sOp + eOp + nOp;
+		currentOp = getSegmentCountCompleted();
+		
+	}
+	
 	
 	public int getSegmentCountCompleted() {
 		int numberTrue = 0;

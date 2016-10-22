@@ -87,9 +87,12 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
     	drivebase.updateSensors();
     	claw.clawGetCheck();
-    	auto.run();
+    	//auto.run();
     }
 
+    public void autonomousContinuous() {
+    	auto.run();
+    }
     
     public void teleopInit() {
     	clawSetpoint = 0;
