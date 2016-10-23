@@ -18,6 +18,7 @@ public class Intake {
 		intake.changeControlMode(CANTalon.TalonControlMode.Position);
 		intake.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
 		intake.configEncoderCodesPerRev(360);
+		//playoffs!?!?! PLAYOFFS?!?! DONT YOU BE TALKING TO ME ABOUE PLAOFFS!!!!
 		intake.enableLimitSwitch(true, true);
 		intake.setPID(P, I, D);
 		intake.enableBrakeMode(false);

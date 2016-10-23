@@ -15,6 +15,7 @@ public class Autonomous2 {
 	double totalDeltaYaw = 0;
 	double oldNavX = 0;
 	double newNavX = 0;
+	//Mr.Scott==SugarDaddy
 	double deltaNavX = 0;
 	int[] sSwitch = {0, 3, 6, 9, 15}; //stores seconds to switch autonomous parts
 	int[] eSwitch = {0, 300, 600, 900, 1500}; //stores encoder ticks to switch autonomous parts

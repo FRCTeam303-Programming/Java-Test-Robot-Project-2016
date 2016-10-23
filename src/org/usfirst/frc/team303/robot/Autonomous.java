@@ -25,14 +25,14 @@ public class Autonomous {
 	
 	//MAIN METHODS BELOW
 	public void lowBarAuto() { //0.6
-		putClawDown();
 		Robot.pneumatics.gearShift.set(false);
-	}
+		Robot.intake.intakeSet(0.45);
+		driveForwardSeconds(3500, 0.60);	}
 	
 	public void rockWallAuto() {
 		Robot.pneumatics.gearShift.set(true);
 		Robot.intake.intakeSet(1.0);
-		driveForwardSeconds(4000);
+		driveForwardSeconds(2100, 0.80);
 	}
 	
 	public void featureTest() {
@@ -44,9 +44,9 @@ public class Autonomous {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// HELPER METHODS BELOW
-	public void driveForwardSeconds(double seconds) {
+	public void driveForwardSeconds(double seconds, double pow) {
 		if((Robot.autoCount) <= (seconds/20)) {
-			Robot.drivebase.drive(-0.80, 0.80);
+			Robot.drivebase.drive(-pow, pow);
 		}
 		else {
 			Robot.drivebase.drive(0, 0);

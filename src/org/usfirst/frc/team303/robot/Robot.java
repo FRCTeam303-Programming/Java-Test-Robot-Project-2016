@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 	static IntakeWheels intakewheels = new IntakeWheels();
 	static Pneumatics pneumatics = new Pneumatics();
 	static DashboardVision vision = new DashboardVision();
-	static Autonomous2 auto;
+	static Autonomous auto;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -78,7 +78,7 @@ public class Robot extends IterativeRobot {
     	autoSelected1 = (String) chooser1.getSelected();
 		System.out.println("Auto selected: " + autoSelected1);
 		autoInitialNavX = drivebase.navX.getYaw();
-		auto = new Autonomous2();
+		auto = new Autonomous();
     }
 
     /**
@@ -87,14 +87,11 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
     	drivebase.updateSensors();
     	claw.clawGetCheck();
-    	//auto.run();
-    }
-
-    public void autonomousContinuous() {
     	auto.run();
     }
     
     public void teleopInit() {
+    	//auto.mainS.stop();
     	clawSetpoint = 0;
     	autoCount = 0;
     }

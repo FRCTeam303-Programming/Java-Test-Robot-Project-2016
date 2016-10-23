@@ -7,6 +7,7 @@ public class Pneumatics {
 
 	Compressor compressor = new Compressor();
 	Solenoid piston = new Solenoid(0);
+	//we need more compressionnnn
 	Solenoid gearShift = new Solenoid(1);
 	
 	
