@@ -25,6 +25,6 @@ public class DriveSeconds implements Action{
 		autoDrive(power);
 	}
 	public void autoDrive(int speed){
-		Robot.drviebase.drive(-speed,speed);
+		Robot.drivebase.drive(-speed,speed);
 	}
 }

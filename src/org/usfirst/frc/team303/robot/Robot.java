@@ -78,6 +78,7 @@ public class Robot extends IterativeRobot {
     	autoSelected1 = (String) chooser1.getSelected();
 		System.out.println("Auto selected: " + autoSelected1);
 		autoInitialNavX = drivebase.navX.getYaw();
+		drivebase.navX.zeroYaw();
 		auto = new Auto(autoSelected1);
     }
 
@@ -153,6 +154,7 @@ public class Robot extends IterativeRobot {
         clawWheelSetpoint = clawwheels.realClawWheelsCtrl(clawWheelSetpoint, clawRotation, clawSetpoint); //magically figures out what the wheel setpoint should be
         clawwheels.clawWheelsSet(clawWheelSetpoint); //tell claw wheels to go to setpoint
         SmartDashboard.putNumber("wheelSetpoint", clawWheelSetpoint);
+        
     }
     
     public void disabledPeriodic() {
