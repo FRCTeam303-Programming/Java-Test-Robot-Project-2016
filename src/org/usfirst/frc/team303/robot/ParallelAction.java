@@ -8,6 +8,9 @@ public class ParallelAction implements Action{
 		conditionActions=conditionActionsC;
 		nonConditionActions=nonConditionActionsC;
 	}
+	public ParallelAction(ArrayList<Action> conditionActionsC){
+		this(conditionActionsC,new ArrayList<Action>());
+	}
 	public void run(){
 		for(Action e:conditionActions){
 			e.run();

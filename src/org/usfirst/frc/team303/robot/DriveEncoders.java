@@ -29,8 +29,7 @@ public class DriveEncoders implements Action{
 			firstRun = false;
 		}
 		else {
-			//Robot.drivebase.drive(-1*(power + ((Robot.drivebase.navX.getYaw() - navXStart)*tuningConstant)), (power - ((Robot.drivebase.navX.getYaw() - navXStart)*tuningConstant)));
-			//Robot.drivebase.drive(power, power);
+		
 			double error = Robot.drivebase.navX.getYaw() - navXStart;
 			Robot.drivebase.drive(-1*(power+(error*tuningConstant)),power-(error*tuningConstant));
 			SmartDashboard.putNumber("ERROR IN NAVX", error);

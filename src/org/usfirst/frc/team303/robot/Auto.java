@@ -15,10 +15,10 @@ public class Auto {
 		ArrayList<Action>para1NonCon= new ArrayList<Action>();
 		arr.add(new ParallelAction(para1Con,para1NonCon)); */
 		ArrayList<Action>para1Con= new ArrayList<Action>();
-		para1Con.add(new setIntake(0.4));
 		//para1Con.add(new DriveEncoders(1400, 0.7, -0.01));
 		para1Con.add(new TurnNavX(50, .0001, 0, 0));
 		ArrayList<Action>para1NonCon= new ArrayList<Action>();
+		para1NonCon.add(new setIntake(0.4));
 		arr.add(new ParallelAction(para1Con,para1NonCon));
 		arr.add(new Wait(15000));
 	}
