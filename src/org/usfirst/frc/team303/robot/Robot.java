@@ -19,9 +19,13 @@ import edu.wpi.first.wpilibj.networktables.*;
  */
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
-    final static String defaultAuto = "Default", lowBar = "Low Bar", rockWall = "Rock Wall / Rough Terrain", shovelTheFries = "Shovel the Fries",lowBarLowGoal="Low Bar Low Goal";
+    final static String defaultAuto = "Default", lowBar = "Low Bar";
+    final static String rockWall = "Rock Wall / Rough Terrain";
+    final static String shovelTheFries = "Shovel the Fries";
+    final static String lowBarLowGoal = "Low Bar Low Goal";
     static String autoSelected1;
     static SendableChooser chooser1, chooser2;
+    
     static double clawSetpoint = 0, intakeSetpoint = 0, clawWheelSetpoint = 0, clawRotation = 0;
     static double[] visionMotors = {0, 0};
     

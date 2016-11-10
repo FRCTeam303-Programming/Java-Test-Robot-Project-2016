@@ -1,12 +1,12 @@
 package org.usfirst.frc.team303.robot;
 import edu.wpi.first.wpilibj.Timer;
-public class DriveSeconds implements Action{
+public class ActionDriveSeconds implements Action{
 	
 	int time;
 	int power;
 	Timer t = new Timer();
 	boolean firstRun=true;
-	public DriveSeconds(int timeC, int powerC){
+	public ActionDriveSeconds(int timeC, int powerC){
 		time=timeC;
 		power=powerC;
 		

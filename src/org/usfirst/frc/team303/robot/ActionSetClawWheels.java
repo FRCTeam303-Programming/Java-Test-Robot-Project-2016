@@ -5,7 +5,7 @@ public class ActionSetClawWheels implements Action {
 	public ActionSetClawWheels(double setPointC){
 		setPoint=setPointC;
 	}
-	public boolean isFinished(){
+	public boolean isFinished(){ //TODO add condition, must test tolernace first
 		return true;
 	}
 	public void run(){

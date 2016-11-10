@@ -3,7 +3,7 @@ package org.usfirst.frc.team303.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 
-public class TurnNavX implements Action {
+public class ActionTurnNavX implements Action {
 	double angleSetpoint;
 	boolean firstRun=true;
 	double kp;
@@ -14,7 +14,7 @@ public class TurnNavX implements Action {
 	double previousTime=0;
 	double doneCounter;
 	Timer t= new Timer();
-	public TurnNavX(double angleC,double kpC,double kiC,double kdC){
+	public ActionTurnNavX(double angleC,double kpC,double kiC,double kdC){
 		angleSetpoint=angleC;
 		kp=kpC;
 		ki=kiC;

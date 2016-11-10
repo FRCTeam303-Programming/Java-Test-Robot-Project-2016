@@ -1,8 +1,8 @@
 package org.usfirst.frc.team303.robot;
 
-public class setIntake implements Action{
+public class ActionSetIntake implements Action{
 	double setpoint;
-	public setIntake(double setpointC){
+	public ActionSetIntake(double setpointC){
 		setpoint=setpointC;
 	}
 	public void run(){
