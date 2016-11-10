@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.networktables.*;
  */
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
-    final static String defaultAuto = "Default", lowBar = "Low Bar", rockWall = "Rock Wall / Rough Terrain", featureTest = "Feature Test";
+    final static String defaultAuto = "Default", lowBar = "Low Bar", rockWall = "Rock Wall / Rough Terrain", shovelTheFries = "Shovel the Fries",lowBarLowGoal="Low Bar Low Goal";
     static String autoSelected1;
     static SendableChooser chooser1, chooser2;
     static double clawSetpoint = 0, intakeSetpoint = 0, clawWheelSetpoint = 0, clawRotation = 0;
@@ -52,8 +52,9 @@ public class Robot extends IterativeRobot {
         chooser1 = new SendableChooser();
         chooser1.addDefault("Default Auto", defaultAuto);
         chooser1.addObject("Low Bar", lowBar);
+        chooser1.addObject("Low Bar Low Goal", lowBarLowGoal);
         chooser1.addObject("Rock Wall / Rough Terrain", rockWall);
-        chooser1.addObject("Feature Test", featureTest);
+        chooser1.addObject("Shovel the Fries", shovelTheFries);
         SmartDashboard.putData("Auto choices", chooser1);
         
         drivebase.drivebaseInit(); //runs methods relating to configuring motor direction and encoders

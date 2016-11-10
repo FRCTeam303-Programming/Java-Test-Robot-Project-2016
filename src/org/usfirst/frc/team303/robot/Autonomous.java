@@ -12,10 +12,10 @@ public class Autonomous {
 			//Put rock wall / rough terrain code here
 			rockWallAuto();
 			break;
-		case Robot.featureTest:
+		//case Robot.featureTest:
 			//Put feature test code here
-			featureTest();
-			break;
+			//featureTest();
+			//break;
 		default:
 			//Put default auto code here
 			break;

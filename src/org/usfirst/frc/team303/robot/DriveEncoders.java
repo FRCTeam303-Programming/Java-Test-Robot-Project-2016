@@ -24,13 +24,14 @@ public class DriveEncoders implements Action{
 	public void run(){
 		if(firstRun){
 			encoderStart = (Robot.drivebase.rDriveEnc.getDistance()+Robot.drivebase.lDriveEnc.getDistance())/2;
-			navXStart = (Robot.drivebase.navX.getYaw());
-			Robot.drivebase.drive(-1*(power + ((Robot.drivebase.navX.getYaw() - navXStart)*tuningConstant)), (power - ((Robot.drivebase.navX.getYaw() - navXStart)*tuningConstant)));
+			Robot.drivebase.navX.zeroYaw();
+			//navXStart = (Robot.drivebase.navX.getYaw());
+			//Robot.drivebase.drive(-1*(power + ((Robot.drivebase.navX.getYaw() - navXStart)*tuningConstant)), (power - ((Robot.drivebase.navX.getYaw() - navXStart)*tuningConstant)));
 			firstRun = false;
 		}
 		else {
 		
-			double error = Robot.drivebase.navX.getYaw() - navXStart;
+			double error = Robot.drivebase.navX.getYaw();// - navXStart;
 			Robot.drivebase.drive(-1*(power+(error*tuningConstant)),power-(error*tuningConstant));
 			SmartDashboard.putNumber("ERROR IN NAVX", error);
 			SmartDashboard.putNumber("Lspeed", -1*(power+(error*tuningConstant)));
