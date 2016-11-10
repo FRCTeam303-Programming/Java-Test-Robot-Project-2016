@@ -35,7 +35,6 @@ public class Auto {
 		para4NonCon.add(new ActionSetClawWheels(2000));
 		arr.add(new ParallelAction(para4Con,para4NonCon));
 		
-		arr.add(new Wait(16000));
 		break;
 		
 		case(Robot.lowBar):
@@ -80,6 +79,7 @@ public class Auto {
 			break;
 			
 	}
+		arr.add(new Wait(10000));
 	}
 	
 	
