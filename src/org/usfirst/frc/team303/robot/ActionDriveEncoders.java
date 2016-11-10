@@ -3,14 +3,14 @@ import org.usfirst.frc.team303.robot.Robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriveEncoders implements Action{
+public class ActionDriveEncoders implements Action{
 	double encoders;
 	double power;
 	double encoderStart;
 	double navXStart;
 	double tuningConstant;
 	boolean firstRun;
-	public DriveEncoders(double encodersC, double powerC,double tuningConstantC){
+	public ActionDriveEncoders(double encodersC, double powerC,double tuningConstantC){
 		encoders=encodersC;
 		power=powerC;
 		tuningConstant=tuningConstantC;
