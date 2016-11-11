@@ -29,13 +29,13 @@ public class Auto {
 			break;
 			
 	}
+		arr.add(new ActionWait(100000));
 	}
 	
 	
 	public void run(){
 		if(arr.get(taskNum).isFinished())
 			taskNum++;
-		if(taskNum<arr.size())
 		arr.get(taskNum).run();
 	}
 	private void assembleLowBarLowGoal(){
@@ -46,7 +46,7 @@ public class Auto {
 		arr.add(new ActionParallelAction(para1Con,para1NonCon));
 		
 		ArrayList<Action>para2Con= new ArrayList<Action>();
-		para2Con.add(new ActionTurnNavX(57, .04, 0.055, 0.0003));
+		para2Con.add(new ActionTurnNavX(57, .02, 0.08, 0.0005));
 		ArrayList<Action>para2NonCon= new ArrayList<Action>();
 		para2NonCon.add(new ActionSetIntake(0.4));
 		arr.add(new ActionParallelAction(para2Con,para2NonCon));

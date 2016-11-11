@@ -1,5 +1,6 @@
 package org.usfirst.frc.team303.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Utility;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -159,6 +160,13 @@ public class Robot extends IterativeRobot {
         clawWheelSetpoint = clawwheels.realClawWheelsCtrl(clawWheelSetpoint, clawRotation, clawSetpoint); //magically figures out what the wheel setpoint should be
         clawwheels.clawWheelsSet(clawWheelSetpoint); //tell claw wheels to go to setpoint
         SmartDashboard.putNumber("wheelSetpoint", clawWheelSetpoint);
+     	
+    	oi.xbox.setRumble(RumbleType.kLeftRumble, (clawwheels.speedL>=6700 ? 1 : 0));
+    	oi.xbox.setRumble(RumbleType.kRightRumble, (clawwheels.speedR<=-5600 ? 1 : 0));
+   
+    	if(clawwheels.speedL>=6700 && clawwheels.speedR<=-5600) {SmartDashboard.putString("rumble", "yes");} else {
+    		SmartDashboard.putString("rumble", "no");
+    	}
         
     }
     
@@ -173,6 +181,12 @@ public class Robot extends IterativeRobot {
     		SmartDashboard.putString("intake reset", "INTAKE SUSTAINED");
     	}
     	
+    	oi.updateJoyValues();
+    	oi.xbox.setRumble(RumbleType.kLeftRumble, (oi.xboxBtnStart ? 1 : 0));
+    	oi.xbox.setRumble(RumbleType.kRightRumble, (oi.xboxBtnStart ? 1 : 0));
+    	if(oi.xboxBtnStart) {SmartDashboard.putString("rumble", "yes");} else {
+    		SmartDashboard.putString("rumble", "no");
+    	}
     }
     
     /**

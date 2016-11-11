@@ -56,6 +56,8 @@ public class ActionTurnNavX implements Action {
 		SmartDashboard.putNumber("t2", Robot.drivebase.navX.getYaw());
 		SmartDashboard.putNumber("The D", d);
 		SmartDashboard.putNumber("The I", i);
+		SmartDashboard.putNumber("The P", p);
+		SmartDashboard.putNumber("The PID", speed);
 		
 	}
 }

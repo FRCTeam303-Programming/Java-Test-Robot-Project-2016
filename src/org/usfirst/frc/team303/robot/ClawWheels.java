@@ -1,6 +1,7 @@
 package org.usfirst.frc.team303.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Joystick.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ClawWheels {
@@ -41,16 +42,23 @@ public class ClawWheels {
 	   clawWheelR.enable();
    }
    
-   public double xboxWheelCtrl(double oldwheels) {
-	   if(Robot.oi.xboxBtnA)
-			return 0;
-		else if(Robot.oi.xboxBtnB)
+   public double xboxWheelCtrl(double oldwheels) {  
+	   
+	   if(Robot.oi.xboxBtnA) {
+		   return 0;
+	   }
+		else if(Robot.oi.xboxBtnB) {
 			return 5000;
-		else if(Robot.oi.xboxBtnX)
+		}
+		else if(Robot.oi.xboxBtnX) {
 			return 20000;
-		else if(Robot.oi.xboxBtnY)
+		}
+		else if(Robot.oi.xboxBtnY) {
 			return 0;
-		else return oldwheels;
+		}
+		else {
+			return oldwheels;	
+		}
    }
    
    public double realClawWheelsCtrl(double oldwheels, double clawRotation, double clawSetpoint) {
@@ -91,4 +99,5 @@ public class ClawWheels {
 	   clawWheelL.set(setpoint);
 	   clawWheelR.set(-1*(setpoint));
    }
+   
 }

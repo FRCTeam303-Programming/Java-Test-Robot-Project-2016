@@ -1,6 +1,7 @@
 package org.usfirst.frc.team303.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick.RumbleType;
 
 
 public class OI {
@@ -84,6 +85,7 @@ String rStickBtnArrayString;
 		xboxBtnRBumper = xbox.getRawButton(6);
 		xboxLTrigger = xbox.getRawAxis(2);
 		xboxRTrigger = xbox.getRawAxis(3);
+		
 	}
 	
 	/**
