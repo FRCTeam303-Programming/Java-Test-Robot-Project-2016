@@ -6,7 +6,7 @@ public class Auto {
 	ArrayList<Action> arr= new ArrayList<Action>();
 	int taskNum=0;
 	public Auto(String mode){ 
-		
+		//selects auto mode
 		switch(Robot.autoSelected1){
 		case(Robot.lowBarLowGoal):
 			assembleLowBarLowGoal();
@@ -20,7 +20,7 @@ public class Auto {
 			assembleRockWall();
 		break;
 		
-		case(Robot.shovelTheFries):
+		case(Robot.shovelTheFries)://for the uninformed shovelTheFries is cheval
 			assembleShovelTheFries();
 		break;
 		

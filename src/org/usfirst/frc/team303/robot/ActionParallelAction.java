@@ -8,9 +8,11 @@ public class ActionParallelAction implements Action{
 		conditionActions=conditionActionsC;
 		nonConditionActions=nonConditionActionsC;
 	}
+	//alternate constructor for when you only have conditional actions
 	public ActionParallelAction(ArrayList<Action> conditionActionsC){
 		this(conditionActionsC,new ArrayList<Action>());
 	}
+	//runs all actions
 	public void run(){
 		for(Action e:conditionActions){
 			e.run();
@@ -19,6 +21,7 @@ public class ActionParallelAction implements Action{
 			e.run();
 		}
 	}
+	//checks if all conditional actions are finished
 	public boolean isFinished(){
 		for(Action e:conditionActions){
 			if(!e.isFinished())

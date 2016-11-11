@@ -21,6 +21,7 @@ public class ActionTurnNavX implements Action {
 		kd=kdC;
 		firstRun=true;
 	}
+	//checks if it is within two degrees for 5 iterations of code
 	public boolean isFinished(){
 		if(Math.abs(angleSetpoint-Robot.drivebase.navX.getYaw())<=2){
 			doneCounter++;
@@ -30,6 +31,7 @@ public class ActionTurnNavX implements Action {
 		}
 		return(doneCounter>=5);
 	}
+	//runs the action with PID control
 	public void run(){
 		if(firstRun){
 			Robot.drivebase.navX.zeroYaw();
@@ -49,11 +51,8 @@ public class ActionTurnNavX implements Action {
 		}
 		double speed= p+i+d;
 		Robot.drivebase.drive(-speed, -speed);
-		SmartDashboard.putNumber("Time", t.get()-previousTime);
 		previousTime=t.get();
 		SmartDashboard.putNumber("ERROR IN NAVX", error);
-		SmartDashboard.putNumber("t1", angleSetpoint);
-		SmartDashboard.putNumber("t2", Robot.drivebase.navX.getYaw());
 		SmartDashboard.putNumber("The D", d);
 		SmartDashboard.putNumber("The I", i);
 		SmartDashboard.putNumber("The P", p);

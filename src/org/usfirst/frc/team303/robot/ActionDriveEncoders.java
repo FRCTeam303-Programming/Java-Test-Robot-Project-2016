@@ -11,9 +11,9 @@ public class ActionDriveEncoders implements Action{
 	double tuningConstant;
 	boolean firstRun;
 	public ActionDriveEncoders(double encodersC, double powerC,double tuningConstantC){
-		encoders=encodersC;
-		power=powerC;
-		tuningConstant=tuningConstantC;
+		encoders=encodersC;//how many encoder ticks
+		power=powerC;//how fast
+		tuningConstant=tuningConstantC;//-.01 works well
 		firstRun=true;
 	}
 	public boolean isFinished(){
@@ -25,17 +25,12 @@ public class ActionDriveEncoders implements Action{
 		if(firstRun){
 			encoderStart = (Robot.drivebase.rDriveEnc.getDistance()+Robot.drivebase.lDriveEnc.getDistance())/2;
 			Robot.drivebase.navX.zeroYaw();
-			//navXStart = (Robot.drivebase.navX.getYaw());
-			//Robot.drivebase.drive(-1*(power + ((Robot.drivebase.navX.getYaw() - navXStart)*tuningConstant)), (power - ((Robot.drivebase.navX.getYaw() - navXStart)*tuningConstant)));
 			firstRun = false;
 		}
 		else {
 		
-			double error = Robot.drivebase.navX.getYaw();// - navXStart;
+			double error = Robot.drivebase.navX.getYaw();
 			Robot.drivebase.drive(-1*(power+(error*tuningConstant)),power-(error*tuningConstant));
-			SmartDashboard.putNumber("ERROR IN NAVX", error);
-			SmartDashboard.putNumber("Lspeed", -1*(power+(error*tuningConstant)));
-			SmartDashboard.putNumber("speed", power-(error*tuningConstant));
 			
 		}
 	}
