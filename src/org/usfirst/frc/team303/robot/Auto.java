@@ -34,9 +34,11 @@ public class Auto {
 	
 	
 	public void run(){
-		if(arr.get(taskNum).isFinished())
-			taskNum++;
-		arr.get(taskNum).run();
+		if(arr.size()<taskNum){
+			if(arr.get(taskNum).isFinished())
+				taskNum++;
+			arr.get(taskNum).run();
+		}
 	}
 	private void assembleLowBarLowGoal(){
 		ArrayList<Action>para1Con= new ArrayList<Action>();
@@ -77,7 +79,7 @@ public class Auto {
 	
 	private void assembleRockWall(){
 		ArrayList<Action>para1Con= new ArrayList<Action>();
-		para1Con.add(new ActionDriveEncoders(700,1,-.01));
+		para1Con.add(new ActionDriveEncoders(1000,1,-.01));
 		ArrayList<Action>para1NonCon= new ArrayList<Action>();
 		para1NonCon.add(new ActionSetIntake(0.8));
 		arr.add(new ActionParallelAction(para1Con,para1NonCon));

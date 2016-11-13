@@ -1,7 +1,4 @@
 package org.usfirst.frc.team303.robot;
-import org.usfirst.frc.team303.robot.Robot;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ActionDriveEncoders implements Action{
 	double encoders;
