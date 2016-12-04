@@ -10,6 +10,7 @@ import org.usfirst.frc.team303.robot.Intake;
 import org.usfirst.frc.team303.robot.RobotMap;
 import org.usfirst.frc.team303.robot.Drivebase;
 import edu.wpi.first.wpilibj.networktables.*;
+import java.io.IOException;
  
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,6 +37,9 @@ public class Robot extends IterativeRobot {
     static int rectLeft = 0, rectRight = 0, rectTop = 0, rectBottom = 0;
     static double[] visionSetpoints = {0, 0};
     
+    private final NetworkTable grip = NetworkTable.getTable("targets");
+
+    
     /*
      * These objects may have to be moved to robotInit() or to Robot() constructor. 
      */
@@ -61,6 +65,12 @@ public class Robot extends IterativeRobot {
         chooser1.addObject("Rock Wall / Rough Terrain", rockWall);
         chooser1.addObject("Shovel the Fries", shovelTheFries);
         SmartDashboard.putData("Auto choices", chooser1);
+        
+        try {
+            new ProcessBuilder("/home/lvuser/grip").inheritIO().start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         
         drivebase.drivebaseInit(); //runs methods relating to configuring motor direction and encoders
         claw.clawInit(); //runs methods relating to configuring PID loops and encoders
@@ -167,6 +177,12 @@ public class Robot extends IterativeRobot {
     	if(clawwheels.speedL>=6700 && clawwheels.speedR<=-5600) {SmartDashboard.putString("rumble", "yes");} else {
     		SmartDashboard.putString("rumble", "no");
     	}
+    	
+    	 for (double area : grip.getNumberArray("targets/area", new double[0])) {
+             SmartDashboard.putString("Got contour with area=" ,"" + area);
+             
+             
+         }
         
     }
     
